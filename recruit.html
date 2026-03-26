@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>バイト募集 |（名称募集中）</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== RECRUIT HERO ===== */
+    .recruit-hero {
+      background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
+      border: 1.5px solid rgba(124,58,237,0.15);
+      border-radius: 24px;
+      padding: 55px 38px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+
+    .recruit-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--pink), var(--purple), var(--cyan), var(--yellow));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: gradientMove 4s ease infinite;
+      background-size: 300% 300%;
+    }
+
+    .recruit-emoji-row {
+      font-size: 2.8rem;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .recruit-emoji-row span {
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .recruit-emoji-row span:nth-child(2) { animation-delay: 0.6s; }
+    .recruit-emoji-row span:nth-child(3) { animation-delay: 1.2s; }
+    .recruit-emoji-row span:nth-child(4) { animation-delay: 1.8s; }
+
+    .recruit-headline {
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .recruit-sub {
+      font-size: 0.98rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      max-width: 500px;
+      margin: 0 auto 26px;
+    }
+
+    /* ===== POINTS ===== */
+    .points-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+      gap: 20px;
+    }
+
+    .point-card {
+      background: white;
+      border: 1.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .point-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--pink), var(--purple));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .point-card:hover {
+      transform: translateY(-7px);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .point-card:hover::after { transform: scaleX(1); }
+
+    .point-num {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .point-icon { font-size: 1.9rem; margin-bottom: 10px; display: block; animation: float 4s ease-in-out infinite; }
+    .point-card:nth-child(2) .point-icon { animation-delay: 1s; }
+    .point-card:nth-child(3) .point-icon { animation-delay: 2s; }
+    .point-card:nth-child(4) .point-icon { animation-delay: 3s; }
+    .point-card:nth-child(5) .point-icon { animation-delay: 0.5s; }
+    .point-card:nth-child(6) .point-icon { animation-delay: 1.5s; }
+
+    .point-title { font-weight: 900; font-size: 1rem; color: var(--purple); margin-bottom: 8px; }
+    .point-desc { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.75; }
+
+    /* ===== SALARY HIGHLIGHT ===== */
+    .salary-box {
+      background: linear-gradient(135deg, var(--purple-soft), var(--cyan-soft));
+      border: 1.5px solid rgba(124,58,237,0.15);
+      border-radius: 20px;
+      padding: 35px 30px;
+      text-align: center;
+    }
+
+    .salary-big {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 7vw, 4rem);
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .salary-badges {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    /* ===== JOB DETAILS ===== */
+    .job-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 16px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .job-row:last-child { border-bottom: none; }
+
+    .job-label {
+      min-width: 105px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--cyan);
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .job-value {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .job-value strong { color: var(--text); }
+
+    /* ===== BACK INFO ===== */
+    .back-box {
+      background: linear-gradient(135deg, var(--yellow-soft), #fef3c7);
+      border: 1.5px solid rgba(245,158,11,0.25);
+      border-radius: 18px;
+      padding: 28px 24px;
+    }
+
+    .back-title {
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #b45309;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .back-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .back-list li::before {
+      content: '✦';
+      color: var(--yellow);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ===== CTA ===== */
+    .cta-box {
+      background: linear-gradient(135deg, var(--pink-soft), var(--purple-soft));
+      border: 1.5px solid rgba(233,30,140,0.15);
+      border-radius: 24px;
+      padding: 55px 38px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::after {
+      content: '🍺';
+      position: absolute;
+      font-size: 14rem;
+      right: -30px; bottom: -30px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-size: clamp(1.3rem, 3.5vw, 2rem);
+      font-weight: 900;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cta-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      margin-bottom: 28px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><span class="emoji">🍺</span>（名称募集中）</a>
+    <ul class="nav-links">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="menu.html">メニュー・料金</a></li>
+      <li><a href="facilities.html">店内設備</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li><a href="recruit.html" class="active">バイト募集</a></li>
+      <li><a href="feedback.html">ご意見</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">🏠 TOP</a>
+    <a href="menu.html">🍹 メニュー・料金</a>
+    <a href="facilities.html">🎤 店内設備</a>
+    <a href="access.html">📍 アクセス</a>
+    <a href="recruit.html" class="active">💼 バイト募集</a>
+    <a href="feedback.html">💬 ご意見・ご要望</a>
+  </div>
+
+  <header class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="page-header-orb" style="width:350px;height:350px;background:radial-gradient(circle,rgba(233,30,140,0.2),transparent);top:-100px;right:-80px;"></div>
+    <div class="page-header-orb" style="width:280px;height:280px;background:radial-gradient(circle,rgba(245,158,11,0.15),transparent);bottom:-70px;left:-60px;"></div>
+    <div class="page-header-content">
+      <h1 class="gradient-text">💼 アルバイト募集</h1>
+      <p>一緒にお店を作りませんか？男女ともに募集中！</p>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- RECRUIT HERO -->
+    <section class="section">
+      <div class="container">
+        <div class="recruit-hero reveal">
+          <div class="recruit-emoji-row">
+            <span>🍺</span><span>🎓</span><span>✨</span><span>🎉</span>
+          </div>
+          <div class="recruit-headline">一緒にお店を作りませんか？</div>
+          <p class="recruit-sub">
+            2027年4月のオープンに向けて、一緒に盛り上げてくれる仲間を募集中！<br>
+            バイト未経験でも、授業が忙しくても大丈夫。<br>
+            男女ともに歓迎・学生優遇あり。
+          </p>
+          <div>
+            <span class="badge badge-pink" style="margin:4px;">👫 男女ともに募集</span>
+            <span class="badge badge-yellow" style="margin:4px;">🎓 学生優遇あり</span>
+            <span class="badge badge-cyan" style="margin:4px;">📅 シフト自由</span>
+            <span class="badge badge-purple" style="margin:4px;">👌 未経験OK</span>
+            <span class="badge" style="margin:4px;background:rgba(233,30,140,0.08);color:var(--pink);border:1px solid rgba(233,30,140,0.25);">🚫 高校生不可・18歳以上</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SALARY HIGHLIGHT -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2 class="gradient-text">💴 給与・待遇</h2>
+          <div class="divider"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;">
+          <div class="salary-box reveal delay-1">
+            <div style="font-size:0.88rem;color:var(--text-muted);margin-bottom:6px;font-weight:700;">時給</div>
+            <div class="salary-big">¥1,031〜</div>
+            <div style="font-size:0.84rem;color:var(--text-secondary);line-height:1.7;">
+              長崎県最低賃金 <strong style="color:var(--purple);">1,031円</strong>（2025年12月〜）以上を保証<br>
+              <span style="font-size:0.78rem;color:var(--text-muted);">深夜帯（22:00〜翌5:00）は深夜手当が別途加算されます</span>
+            </div>
+            <div class="salary-badges">
+              <span class="badge badge-yellow">🌙 深夜手当あり</span>
+              <span class="badge badge-green">📈 昇給あり</span>
+            </div>
+          </div>
+          <div class="back-box reveal delay-2">
+            <div class="back-title">
+              <span>💰</span> 各種バック制度あり
+            </div>
+            <ul class="back-list">
+              <li>お客様をご紹介いただいた際のご紹介バック</li>
+              <li>ドリンク販売に応じた売上バック（詳細は面談にて）</li>
+              <li>イベント・特別日の特別バック</li>
+              <li>その他インセンティブ制度（順次拡充予定）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- POINTS -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2>⭐ バイトの魅力</h2>
+          <div class="divider"></div>
+        </div>
+        <div class="points-grid">
+          <div class="point-card reveal delay-1">
+            <div class="point-num">01</div>
+            <span class="point-icon">👫</span>
+            <div class="point-title">男女ともに大歓迎</div>
+            <div class="point-desc">男女問わず募集。楽しい仲間と一緒に働こう！</div>
+          </div>
+          <div class="point-card reveal delay-2">
+            <div class="point-num">02</div>
+            <span class="point-icon">🎓</span>
+            <div class="point-title">学生優遇あり</div>
+            <div class="point-desc">学生ならシフト・試験期間など融通を利かせます。学業最優先でOK！</div>
+          </div>
+          <div class="point-card reveal delay-3">
+            <div class="point-num">03</div>
+            <span class="point-icon">📅</span>
+            <div class="point-title">シフト自由</div>
+            <div class="point-desc">週1日〜OK！授業・サークル・試験に合わせて自由にシフトが組めます。</div>
+          </div>
+          <div class="point-card reveal delay-4">
+            <div class="point-num">04</div>
+            <span class="point-icon">🌱</span>
+            <div class="point-title">未経験OK</div>
+            <div class="point-desc">バーやお酒が初めてでも安心！丁寧にサポートします。</div>
+          </div>
+          <div class="point-card reveal delay-1">
+            <div class="point-num">05</div>
+            <span class="point-icon">💰</span>
+            <div class="point-title">各種バック制度</div>
+            <div class="point-desc">頑張れば頑張るほど稼げる！各種バック・インセンティブ制度あり。</div>
+          </div>
+          <div class="point-card reveal delay-2">
+            <div class="point-num">06</div>
+            <span class="point-icon">🚀</span>
+            <div class="point-title">一緒にお店を作れる</div>
+            <div class="point-desc">「こんなイベントやりたい！」「このドリンク入れて！」あなたのアイデアを大切に。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOB DETAILS -->
+    <section class="section section-alt">
+      <div class="container container-sm">
+        <div class="section-heading reveal">
+          <h2>📋 募集要項</h2>
+          <div class="divider"></div>
+          <p>詳細は面談時にお伝えします（以下は予定）</p>
+        </div>
+        <div class="glass-card reveal">
+          <div class="job-row">
+            <div class="job-label">勤務地</div>
+            <div class="job-value">長崎市内（詳細は開業時公開）</div>
+          </div>
+          <div class="job-row">
+            <div class="job-label">対象</div>
+            <div class="job-value">
+              <strong>男女ともに募集</strong>（18歳以上）・大学生・専門学生歓迎<br>
+              <span style="display:inline-block;margin-top:5px;background:rgba(233,30,140,0.08);color:var(--pink);font-size:0.78rem;font-weight:900;padding:3px 10px;border-radius:50px;border:1px solid rgba(233,30,140,0.2);">🚫 高校生不可（18歳以上のみ）</span>
+            </div>
+          </div>
+          <div class="job-row">
+            <div class="job-label">学生優遇</div>
+            <div class="job-value"><strong>学生優遇あり</strong>：シフト・試験期間・授業優先でOK</div>
+          </div>
+          <div class="job-row">
+            <div class="job-label">勤務時間</div>
+            <div class="job-value">
+              平日（月〜木）18:00〜翌2:00<br>
+              週末（金・土・祝前日）18:00〜翌4:00<br>
+              <span style="font-size:0.8rem;color:var(--text-muted);">短時間勤務・時間帯応相談</span>
+            </div>
+          </div>
+          <div class="job-row">
+            <div class="job-label">シフト</div>
+            <div class="job-value">週1日〜OK！授業・試験・サークル優先で調整可</div>
+          </div>
+          <div class="job-row">
+            <div class="job-label">時給</div>
+            <div class="job-value">
+              <strong>¥1,031〜</strong>（長崎県最低賃金 1,031円 以上保証）<br>
+              深夜手当 別途支給（22:00〜翌5:00）
+            </div>
+          </div>
+          <div class="job-row">
+            <div class="job-label">各種バック</div>
+            <div class="job-value">ご紹介バック・売上バック・特別バックなど各種インセンティブあり（詳細は面談にて）</div>
+          </div>
+          <div class="job-row">
+            <div class="job-label">経験</div>
+            <div class="job-value"><strong>未経験OK</strong>・バー・飲食経験者歓迎</div>
+          </div>
+          <div class="job-row">
+            <div class="job-label">仕事内容</div>
+            <div class="job-value">ドリンク提供・接客・カラオケ／ダーツ対応・片付けなど</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+      <div class="container container-sm">
+        <div class="cta-box reveal">
+          <div class="cta-title">まずは気軽にご連絡ください！</div>
+          <p class="cta-desc">
+            「バイト興味あるんだけど…」という段階でも大歓迎。<br>
+            下のご意見フォームから「バイト応募」と書いて送ってください。<br>
+            優先的にご連絡します！
+          </p>
+          <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+            <a href="feedback.html" class="btn btn-pink">📩 フォームからご連絡 →</a>
+            <a href="index.html" class="btn btn-outline-purple">TOPに戻る</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span class="footer-logo">（名称募集中）</span>
+    <ul class="footer-nav">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="menu.html">メニュー</a></li>
+      <li><a href="facilities.html">設備</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li><a href="recruit.html">バイト募集</a></li>
+      <li><a href="feedback.html">ご意見</a></li>
+    </ul>
+    <div class="footer-info">長崎市内 ｜ 2027年4月 開業予定</div>
+  </footer>
+
+  <script src="common.js"></script>
+</body>
+</html>

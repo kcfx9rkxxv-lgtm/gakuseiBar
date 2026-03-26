@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メニュー・料金 |（名称募集中）</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== SYSTEM FEES ===== */
+    .sys-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+    }
+
+    .sys-card {
+      background: white;
+      border: 1.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s;
+    }
+
+    .sys-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .sys-icon { font-size: 2.4rem; margin-bottom: 10px; display: block; }
+    .sys-label { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
+
+    .sys-price {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: 2rem;
+      color: var(--purple);
+    }
+
+    .sys-unit { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
+
+    .sys-detail {
+      margin-top: 12px;
+      background: var(--purple-soft);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.78rem;
+      color: var(--purple);
+      line-height: 1.7;
+    }
+
+    /* ===== ALL-YOU-CAN-DRINK ===== */
+    .nomihodai-box {
+      background: linear-gradient(135deg, #fdf4ff, #fce4ec);
+      border: 2px solid rgba(233,30,140,0.2);
+      border-radius: 24px;
+      padding: 50px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nomihodai-box::after {
+      content: '🍻';
+      position: absolute;
+      font-size: 12rem;
+      right: -30px; bottom: -30px;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    .nomi-headline {
+      font-size: 1.1rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+      letter-spacing: 0.06em;
+    }
+
+    .nomi-cards {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      margin: 30px 0;
+    }
+
+    .nomi-card {
+      flex: 1;
+      min-width: 215px;
+      max-width: 290px;
+      background: white;
+      border-radius: 20px;
+      padding: 32px 22px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s;
+      box-shadow: 0 6px 30px rgba(233,30,140,0.12);
+    }
+
+    .nomi-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+
+    .nomi-card:hover { transform: translateY(-8px); }
+
+    .nomi-card.star { background: linear-gradient(135deg, #fff8ff, #fce4ec); }
+
+    .star-badge {
+      position: absolute;
+      top: -1px; right: -1px;
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 5px 14px;
+      border-radius: 0 20px 0 14px;
+    }
+
+    .nomi-age { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
+
+    .nomi-price-big {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 9vw, 4.8rem);
+      line-height: 1;
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glowYellow 2.5s ease-in-out infinite;
+    }
+
+    .nomi-per { font-size: 0.9rem; color: var(--text-secondary); margin-top: 5px; font-weight: 700; }
+
+    .nomi-beer {
+      margin-top: 14px;
+      padding: 9px 12px;
+      background: var(--yellow-soft);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 10px;
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+    }
+
+    .nomi-beer strong { color: #b45309; }
+
+    .nomi-extras {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .nomi-extra-item {
+      background: white;
+      border: 1px solid rgba(124,58,237,0.15);
+      border-radius: 14px;
+      padding: 16px 22px;
+      text-align: center;
+      min-width: 150px;
+      box-shadow: 0 2px 10px rgba(124,58,237,0.06);
+    }
+
+    .nomi-extra-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
+    .nomi-extra-price { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--cyan); }
+    .nomi-extra-unit { font-size: 0.75rem; color: var(--text-muted); }
+
+    .max-price-box {
+      margin-top: 22px;
+      display: inline-block;
+      background: var(--cyan-soft);
+      border: 1px solid rgba(8,145,178,0.2);
+      border-radius: 14px;
+      padding: 14px 28px;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+    }
+
+    .max-price-box strong { color: var(--cyan); }
+
+    /* ===== DRINK MENU ===== */
+    .drink-section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--purple);
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--purple-soft);
+    }
+
+    .drink-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+      gap: 12px;
+      margin-bottom: 45px;
+    }
+
+    .drink-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 15px 18px;
+      box-shadow: 0 2px 10px rgba(124,58,237,0.04);
+      transition: all 0.25s;
+    }
+
+    .drink-item:hover {
+      background: var(--purple-soft);
+      border-color: rgba(124,58,237,0.25);
+      transform: translateX(4px);
+    }
+
+    .drink-name { font-weight: 700; font-size: 0.9rem; flex: 1; color: var(--text); }
+    .drink-name small {
+      display: block;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .drink-price {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: 1.15rem;
+      color: var(--pink);
+      text-align: right;
+      white-space: nowrap;
+      margin-left: 10px;
+    }
+
+    .drink-price small {
+      display: block;
+      font-size: 0.63rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    /* ===== SPECIAL ===== */
+    .special-card {
+      background: linear-gradient(135deg, var(--yellow-soft), #fef3c7);
+      border: 2px solid rgba(245,158,11,0.3);
+      border-radius: 20px;
+      padding: 35px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .special-card::after {
+      content: '🥂';
+      position: absolute;
+      font-size: 8rem;
+      right: -15px; bottom: -15px;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    .special-label {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      color: white;
+      font-weight: 900;
+      font-size: 0.78rem;
+      padding: 5px 18px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+      letter-spacing: 0.08em;
+    }
+
+    .special-name { font-size: 1.5rem; font-weight: 900; color: var(--text); margin-bottom: 10px; }
+
+    .special-price {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: 3.2rem;
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+
+    .special-price span { font-size: 1.2rem; vertical-align: super; }
+    .special-desc { margin-top: 12px; font-size: 0.86rem; color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><span class="emoji">🍺</span>（名称募集中）</a>
+    <ul class="nav-links">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="menu.html" class="active">メニュー・料金</a></li>
+      <li><a href="facilities.html">店内設備</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li><a href="recruit.html">バイト募集</a></li>
+      <li><a href="feedback.html">ご意見</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">🏠 TOP</a>
+    <a href="menu.html" class="active">🍹 メニュー・料金</a>
+    <a href="facilities.html">🎤 店内設備</a>
+    <a href="access.html">📍 アクセス</a>
+    <a href="recruit.html">💼 バイト募集</a>
+    <a href="feedback.html">💬 ご意見・ご要望</a>
+  </div>
+
+  <header class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="page-header-orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(233,30,140,0.2),transparent);top:-80px;left:-60px;"></div>
+    <div class="page-header-orb" style="width:250px;height:250px;background:radial-gradient(circle,rgba(124,58,237,0.18),transparent);bottom:-60px;right:-40px;"></div>
+    <div class="page-header-content">
+      <h1 class="gradient-text">🍹 メニュー・料金</h1>
+      <p>すべてのドリンクと料金プランをチェック！</p>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- SYSTEM FEES -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2>📋 システム料金</h2>
+          <div class="divider"></div>
+          <p>入店時にかかる基本料金です</p>
+        </div>
+        <div class="sys-grid">
+          <div class="sys-card reveal delay-1">
+            <span class="sys-icon">🎫</span>
+            <div class="sys-label">チャージ料金</div>
+            <div class="sys-price">¥300</div>
+            <div class="sys-unit">お一人あたり</div>
+            <div class="sys-detail">全員一律300円<br>（どなたでも同額）</div>
+          </div>
+          <div class="sys-card reveal delay-2">
+            <span class="sys-icon">🎤</span>
+            <div class="sys-label">カラオケ（1〜2名）</div>
+            <div class="sys-price">¥200</div>
+            <div class="sys-unit">お一人あたり</div>
+            <div class="sys-detail">2名 → 400円</div>
+          </div>
+          <div class="sys-card reveal delay-3">
+            <span class="sys-icon">🎤</span>
+            <div class="sys-label">カラオケ（3名以上）</div>
+            <div class="sys-price">¥500</div>
+            <div class="sys-unit">1グループ固定</div>
+            <div class="sys-detail">何名でも500円！<br>グループほどお得</div>
+          </div>
+          <div class="sys-card reveal delay-4" style="border-color:rgba(16,185,129,0.35);background:linear-gradient(135deg,#f0fdf4,#fff);">
+            <span class="sys-icon">🎯</span>
+            <div class="sys-label" style="color:#059669;">ダーツ</div>
+            <div class="sys-price" style="color:#10b981;">¥0</div>
+            <div class="sys-unit">完全無料！</div>
+            <div class="sys-detail" style="background:#d1fae5;color:#065f46;">飲み放題料金に含まれています<br>何回でも自由に楽しめる</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALL-YOU-CAN-DRINK -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2 class="yellow-text">🍻 飲み放題プラン</h2>
+          <div class="divider"></div>
+          <p>これが目玉メニュー！学生に優しい価格設定</p>
+        </div>
+
+        <!-- MANDATORY NOTICE -->
+        <div class="reveal" style="margin-bottom:32px;">
+          <div style="background:linear-gradient(135deg,#fff1f5,#fdf4ff);border:2.5px solid rgba(233,30,140,0.35);border-radius:18px;padding:26px 28px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--pink),var(--purple));border-radius:18px 0 0 18px;"></div>
+            <div style="padding-left:8px;">
+              <div style="font-weight:900;font-size:1.05rem;color:var(--pink);margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+                <span>⚠️</span> 当店のシステムについて（重要）
+              </div>
+              <div style="font-size:0.9rem;color:var(--text-secondary);line-height:1.9;">
+                <p style="margin:0 0 8px;"><strong style="color:var(--text);">飲み放題プランは全員必須</strong>です。単品ドリンクのみのご注文はできません。</p>
+                <p style="margin:0;">飲み放題プランにご加入いただいた上で、追加でショットやボトルなどの<strong style="color:var(--text);">単品メニューをプラスする</strong>スタイルです。</p>
+              </div>
+              <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+                <span style="background:rgba(233,30,140,0.1);color:var(--pink);font-size:0.78rem;font-weight:900;padding:4px 12px;border-radius:50px;">✅ 飲み放題 ＋ 単品追加　→ OK</span>
+                <span style="background:rgba(100,100,100,0.08);color:var(--text-muted);font-size:0.78rem;font-weight:900;padding:4px 12px;border-radius:50px;">❌ 単品のみ　→ NG</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nomihodai-box reveal">
+          <div class="nomi-headline">⭐ ALL YOU CAN DRINK ⭐</div>
+
+          <div class="nomi-cards">
+            <div class="nomi-card star">
+              <div class="star-badge">おすすめ</div>
+              <div class="nomi-age">🎓 23歳以下</div>
+              <div class="nomi-price-big">1,000</div>
+              <div class="nomi-per">円 / 1時間</div>
+              <div class="nomi-beer">🍺 ビール込み <strong>¥1,500</strong></div>
+            </div>
+            <div class="nomi-card">
+              <div class="nomi-age">24歳〜</div>
+              <div class="nomi-price-big">1,500</div>
+              <div class="nomi-per">円 / 1時間</div>
+              <div class="nomi-beer">🍺 ビール込み <strong>¥2,000</strong></div>
+            </div>
+          </div>
+
+          <div class="nomi-extras">
+            <div class="nomi-extra-item">
+              <div class="nomi-extra-label">延長</div>
+              <div class="nomi-extra-price">¥1,000</div>
+              <div class="nomi-extra-unit">/ 自動延長</div>
+            </div>
+          </div>
+
+          <div class="max-price-box">
+            🏷️ 最大料金（以降無制限）<br>
+            <strong>日〜木</strong>：¥4,000〜 ／ <strong>金・土・祝前日</strong>：¥5,000〜
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SINGLE DRINKS -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2 class="gradient-text">🍸 ドリンク単品メニュー</h2>
+          <div class="divider"></div>
+          <p>飲み放題プランに加えて、単品でプラスできます</p>
+        </div>
+
+        <div class="drink-section-title reveal">
+          <span>🥃</span> ショット
+        </div>
+        <div class="drink-grid reveal">
+          <div class="drink-item">
+            <div class="drink-name">スタンダードショット<small>チャミスル・テキーラなど</small></div>
+            <div class="drink-price">¥100<small>/ 20ml</small></div>
+          </div>
+          <div class="drink-item">
+            <div class="drink-name">プレミアムショット<small>パトロン・ドン・フリオなど</small></div>
+            <div class="drink-price">¥500<small>/ 20ml</small></div>
+          </div>
+          <div class="drink-item">
+            <div class="drink-name">スピリタス<small>アルコール96%</small></div>
+            <div class="drink-price">¥300<small>/ 20ml</small></div>
+          </div>
+        </div>
+
+        <div class="drink-section-title reveal">
+          <span>🍹</span> ボトル・カクテル
+        </div>
+        <div class="drink-grid reveal">
+          <div class="drink-item">
+            <div class="drink-name">クライナー</div>
+            <div class="drink-price">¥400<small>/ 1本</small></div>
+          </div>
+          <div class="drink-item">
+            <div class="drink-name">コカボム</div>
+            <div class="drink-price">¥700<small>/ 1杯</small></div>
+          </div>
+          <div class="drink-item">
+            <div class="drink-name">スミノフ・ジーマ<small>ボトル</small></div>
+            <div class="drink-price">¥500<small>/ 1本</small></div>
+          </div>
+          <div class="drink-item">
+            <div class="drink-name">カクテル・ロック等<small>種類により変動</small></div>
+            <div class="drink-price" style="color:var(--cyan);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;font-weight:900;">価格<br>応相談</div>
+          </div>
+        </div>
+
+        <!-- SPECIAL -->
+        <div class="section-heading reveal" style="margin-top:10px;">
+          <h2 class="yellow-text">🥂 スペシャルメニュー</h2>
+          <div class="divider"></div>
+        </div>
+
+        <div class="special-card reveal">
+          <div class="special-label">✨ SPECIAL</div>
+          <div class="special-name">学生シャンパン</div>
+          <div class="special-price"><span>¥</span>5,000</div>
+          <div class="special-desc">特別な日のお祝いに！みんなで乾杯しよう。</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section" style="text-align:center;padding-top:20px;padding-bottom:80px;">
+      <div class="reveal">
+        <p style="color:var(--text-muted);margin-bottom:24px;">「このドリンクを置いてほしい！」というご意見もお待ちしています</p>
+        <a href="feedback.html" class="btn btn-pink" style="margin-right:14px;">ご意見・ご要望 →</a>
+        <a href="facilities.html" class="btn btn-outline-purple">店内設備を見る</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span class="footer-logo">（名称募集中）</span>
+    <ul class="footer-nav">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="menu.html">メニュー</a></li>
+      <li><a href="facilities.html">設備</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li><a href="recruit.html">バイト募集</a></li>
+      <li><a href="feedback.html">ご意見</a></li>
+    </ul>
+    <div class="footer-info">長崎市内 ｜ 2027年4月 開業予定</div>
+  </footer>
+
+  <script src="common.js"></script>
+</body>
+</html>

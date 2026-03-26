@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>店内設備 |（名称募集中）</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .facility-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+    }
+
+    .facility-card {
+      background: white;
+      border: 1.5px solid var(--card-border);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s;
+    }
+
+    .facility-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .facility-illus {
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .facility-card:nth-child(1) .facility-illus { background: linear-gradient(135deg, #fce4ec, #f3e8ff); }
+    .facility-card:nth-child(2) .facility-illus { background: linear-gradient(135deg, #e0f2fe, #d1fae5); }
+    .facility-card:nth-child(3) .facility-illus { background: linear-gradient(135deg, #fef9e7, #fef3c7); }
+    .facility-card:nth-child(4) .facility-illus { background: linear-gradient(135deg, #ede9fe, #fce4ec); }
+    .facility-card:nth-child(5) .facility-illus { background: linear-gradient(135deg, #d1fae5, #e0f2fe); }
+
+    .facility-big-icon {
+      font-size: 5.5rem;
+      animation: floatSide 5s ease-in-out infinite;
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+    }
+
+    .facility-card:nth-child(2) .facility-big-icon { animation-delay: 1s; }
+    .facility-card:nth-child(3) .facility-big-icon { animation-delay: 2s; }
+    .facility-card:nth-child(4) .facility-big-icon { animation-delay: 3s; }
+    .facility-card:nth-child(5) .facility-big-icon { animation-delay: 4s; }
+
+    .facility-body { padding: 22px 20px; }
+
+    .facility-name {
+      font-size: 1.2rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .facility-card:nth-child(1) .facility-name { color: var(--pink); }
+    .facility-card:nth-child(2) .facility-name { color: var(--cyan); }
+    .facility-card:nth-child(3) .facility-name { color: #b45309; }
+    .facility-card:nth-child(4) .facility-name { color: var(--purple); }
+    .facility-card:nth-child(5) .facility-name { color: var(--green); }
+
+    .facility-desc {
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .facility-tag {
+      display: inline-block;
+      padding: 4px 11px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 900;
+      margin: 3px 2px 3px 0;
+    }
+
+    /* Vibe section */
+    .vibe-section {
+      background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
+      border-radius: 24px;
+      padding: 50px 38px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vibe-emoji-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      font-size: 2.4rem;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .vibe-emoji-row span {
+      display: inline-block;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .vibe-emoji-row span:nth-child(2) { animation-delay: 0.3s; }
+    .vibe-emoji-row span:nth-child(3) { animation-delay: 0.6s; }
+    .vibe-emoji-row span:nth-child(4) { animation-delay: 0.9s; }
+    .vibe-emoji-row span:nth-child(5) { animation-delay: 1.2s; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .vibe-title {
+      font-size: clamp(1.3rem, 3.5vw, 2rem);
+      font-weight: 900;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .vibe-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Spec list */
+    .spec-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .spec-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      background: white;
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      padding: 15px 18px;
+      box-shadow: 0 2px 10px rgba(124,58,237,0.04);
+      transition: all 0.25s;
+    }
+
+    .spec-item:hover {
+      background: var(--purple-soft);
+      transform: translateX(5px);
+      border-color: rgba(124,58,237,0.2);
+    }
+
+    .spec-icon { font-size: 1.7rem; }
+    .spec-name { font-weight: 900; font-size: 0.9rem; color: var(--text); }
+    .spec-detail { font-size: 0.76rem; color: var(--text-muted); }
+
+    .coming-badge {
+      display: inline-block;
+      background: var(--yellow-soft);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: #b45309;
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 50px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><span class="emoji">🍺</span>（名称募集中）</a>
+    <ul class="nav-links">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="menu.html">メニュー・料金</a></li>
+      <li><a href="facilities.html" class="active">店内設備</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li><a href="recruit.html">バイト募集</a></li>
+      <li><a href="feedback.html">ご意見</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">🏠 TOP</a>
+    <a href="menu.html">🍹 メニュー・料金</a>
+    <a href="facilities.html" class="active">🎤 店内設備</a>
+    <a href="access.html">📍 アクセス</a>
+    <a href="recruit.html">💼 バイト募集</a>
+    <a href="feedback.html">💬 ご意見・ご要望</a>
+  </div>
+
+  <header class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="page-header-orb" style="width:320px;height:320px;background:radial-gradient(circle,rgba(8,145,178,0.2),transparent);top:-80px;right:-80px;"></div>
+    <div class="page-header-orb" style="width:260px;height:260px;background:radial-gradient(circle,rgba(233,30,140,0.18),transparent);bottom:-60px;left:-50px;"></div>
+    <div class="page-header-content">
+      <h1 class="gradient-text">🏠 店内設備</h1>
+      <p>居心地バツグン！何時間でも過ごせる明るい空間</p>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- MAIN FACILITIES -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2>⚡ 充実の設備</h2>
+          <div class="divider"></div>
+        </div>
+
+        <div class="facility-grid">
+
+          <div class="facility-card reveal delay-1">
+            <div class="facility-illus">
+              <span class="facility-big-icon">🎤</span>
+            </div>
+            <div class="facility-body">
+              <div class="facility-name">カラオケ</div>
+              <div class="facility-desc">飲みながら歌える！追加料金¥200で利用可能。最新J-POPからアニソンまで盛り上がろう。</div>
+              <span class="facility-tag badge-pink">+¥200</span>
+              <span class="facility-tag badge-purple">人気設備</span>
+            </div>
+          </div>
+
+          <div class="facility-card reveal delay-2">
+            <div class="facility-illus" style="position:relative;">
+              <span class="facility-big-icon">🎯</span>
+              <div style="position:absolute;top:12px;right:12px;background:linear-gradient(135deg,#10b981,#059669);color:white;font-size:0.75rem;font-weight:900;padding:5px 13px;border-radius:50px;letter-spacing:0.04em;box-shadow:0 2px 10px rgba(16,185,129,0.4);">✨ 無料</div>
+            </div>
+            <div class="facility-body">
+              <div class="facility-name">ダーツ <span style="font-size:0.75rem;background:linear-gradient(135deg,#10b981,#059669);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;">（無料！）</span></div>
+              <div class="facility-desc">飲み放題料金に含まれているので、追加料金なしで楽しめる！グループでの勝負もヨシ。初心者も大歓迎。</div>
+              <span class="facility-tag" style="background:#d1fae5;color:#065f46;border:1px solid rgba(16,185,129,0.3);">🎯 追加料金なし</span>
+              <span class="facility-tag badge-cyan">対戦OK</span>
+              <span class="facility-tag badge-green">初心者歓迎</span>
+            </div>
+          </div>
+
+          <div class="facility-card reveal delay-3">
+            <div class="facility-illus">
+              <span class="facility-big-icon">📶</span>
+            </div>
+            <div class="facility-body">
+              <div class="facility-name">Wi-Fi 完備</div>
+              <div class="facility-desc">高速Wi-Fi完備。SNSのシェアも動画もゲームも思いっきり楽しめる！もちろん無料。</div>
+              <span class="facility-tag badge-cyan">無料</span>
+              <span class="facility-tag badge-purple">高速回線</span>
+            </div>
+          </div>
+
+          <div class="facility-card reveal delay-4">
+            <div class="facility-illus">
+              <span class="facility-big-icon">🛋️</span>
+            </div>
+            <div class="facility-body">
+              <div class="facility-name">快適な座席</div>
+              <div class="facility-desc">ゆったりくつろげるソファ席や、グループで盛り上がれるテーブル席を完備予定。</div>
+              <span class="facility-tag badge-yellow">ソファ席</span>
+              <span class="facility-tag badge-yellow">グループOK</span>
+            </div>
+          </div>
+
+          <div class="facility-card reveal">
+            <div class="facility-illus">
+              <span class="facility-big-icon">🎵</span>
+            </div>
+            <div class="facility-body">
+              <div class="facility-name">BGM・照明</div>
+              <div class="facility-desc">テンション上がるBGMとカラフルな照明で、夜の空間を演出。写真映えスポットも予定！</div>
+              <span class="facility-tag badge-pink">フォトスポット予定</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- VIBE -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="vibe-section reveal">
+          <div class="vibe-emoji-row">
+            <span>🎉</span><span>🍺</span><span>🎤</span><span>🎯</span><span>🎊</span>
+          </div>
+          <div class="vibe-title">「また来たい！」と思える場所を目指して</div>
+          <p class="vibe-desc">
+            明るくにぎやかで、学生が気軽に立ち寄れるバー。<br>
+            バイト帰りにふらっと寄れて、友達と盛り上がれる——<br>
+            そんな居場所を長崎に作ります。<br><br>
+            詳細な内装・設備は開業に向けて順次公開予定！
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPEC LIST -->
+    <section class="section">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2>🔍 設備一覧</h2>
+          <div class="divider"></div>
+        </div>
+        <div class="spec-list">
+          <div class="spec-item reveal delay-1">
+            <span class="spec-icon">🎤</span>
+            <div>
+              <div class="spec-name">カラオケ設備</div>
+              <div class="spec-detail">+¥200 / 利用</div>
+            </div>
+          </div>
+          <div class="spec-item reveal delay-2" style="border-color:rgba(16,185,129,0.3);background:linear-gradient(135deg,#f0fdf4,#fff);">
+            <span class="spec-icon">🎯</span>
+            <div>
+              <div class="spec-name">ダーツ</div>
+              <div class="spec-detail" style="color:#059669;font-weight:900;">無料・追加料金なし</div>
+            </div>
+          </div>
+          <div class="spec-item reveal delay-3">
+            <span class="spec-icon">📶</span>
+            <div>
+              <div class="spec-name">高速Wi-Fi</div>
+              <div class="spec-detail">無料・全エリア対応</div>
+            </div>
+          </div>
+          <div class="spec-item reveal delay-4">
+            <span class="spec-icon">🔌</span>
+            <div>
+              <div class="spec-name">充電スポット</div>
+              <div class="spec-detail">スマホ充電対応（予定）<span class="coming-badge">準備中</span></div>
+            </div>
+          </div>
+          <div class="spec-item reveal delay-1">
+            <span class="spec-icon">💳</span>
+            <div>
+              <div class="spec-name">キャッシュレス対応</div>
+              <div class="spec-detail">各種支払い方法（予定）<span class="coming-badge">準備中</span></div>
+            </div>
+          </div>
+          <div class="spec-item reveal delay-2">
+            <span class="spec-icon">🎰</span>
+            <div>
+              <div class="spec-name">ゲーム・エンタメ</div>
+              <div class="spec-detail">詳細決定次第公開<span class="coming-badge">準備中</span></div>
+            </div>
+          </div>
+          <div class="spec-item reveal delay-3">
+            <span class="spec-icon">🚭</span>
+            <div>
+              <div class="spec-name">喫煙スペース</div>
+              <div class="spec-detail">詳細は開業時公開</div>
+            </div>
+          </div>
+          <div class="spec-item reveal delay-4">
+            <span class="spec-icon">🪑</span>
+            <div>
+              <div class="spec-name">ソファ席・テーブル席</div>
+              <div class="spec-detail">グループ利用OK</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="text-align:center;padding-top:20px;">
+      <div class="reveal">
+        <p style="color:var(--text-muted);margin-bottom:24px;">「こんな設備が欲しい！」という声もお待ちしています</p>
+        <a href="feedback.html" class="btn btn-pink" style="margin-right:14px;">ご意見・ご要望 →</a>
+        <a href="access.html" class="btn btn-outline-purple">アクセスを見る</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span class="footer-logo">（名称募集中）</span>
+    <ul class="footer-nav">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="menu.html">メニュー</a></li>
+      <li><a href="facilities.html">設備</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li><a href="recruit.html">バイト募集</a></li>
+      <li><a href="feedback.html">ご意見</a></li>
+    </ul>
+    <div class="footer-info">長崎市内 ｜ 2027年4月 開業予定</div>
+  </footer>
+
+  <script src="common.js"></script>
+</body>
+</html>
