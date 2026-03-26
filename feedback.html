@@ -250,17 +250,17 @@
               <div class="form-row2">
                 <div class="form-group">
                   <label class="form-label" for="f_age">年齢<span class="required">*</span></label>
-                  <input type="text" id="f_age" class="form-input" placeholder="例：21歳、20代前半など" maxlength="30" required>
+                  <input type="text" id="f_age" name="年齢" class="form-input" placeholder="例：21歳、20代前半など" maxlength="30" required>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="f_gender">性別<span class="required">*</span></label>
-                  <input type="text" id="f_gender" class="form-input" placeholder="例：男、女、その他など" maxlength="30" required>
+                  <input type="text" id="f_gender" name="性別" class="form-input" placeholder="例：男、女、その他など" maxlength="30" required>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="f_location">作ってほしい場所のご希望<span class="optional">（任意）</span></label>
-                <input type="text" id="f_location" class="form-input" placeholder="例：長崎大学の近く、新地中華街エリアなど" maxlength="150">
+                <input type="text" id="f_location" name="場所のご希望" class="form-input" placeholder="例：長崎大学の近く、新地中華街エリアなど" maxlength="150">
               </div>
 
               <div class="form-group">
@@ -283,7 +283,7 @@
                   <div class="topic-chip" data-text="正直に言うと、ここが気になる：">😤 ここが不満・改善してほしい</div>
                 </div>
 
-                <textarea id="f_message" class="form-textarea" style="min-height:140px;" placeholder="良いことも悪いことも、なんでも自由にどうぞ！批判・改善案・不満点も大歓迎です。" maxlength="1000" required></textarea>
+                <textarea id="f_message" name="メッセージ" class="form-textarea" style="min-height:140px;" placeholder="良いことも悪いことも、なんでも自由にどうぞ！批判・改善案・不満点も大歓迎です。" maxlength="1000" required></textarea>
                 <div class="char-count" id="charCount">0 / 1000</div>
               </div>
 
@@ -371,13 +371,28 @@
       errEl.style.display = 'none';
       const btn = document.getElementById('submitBtn');
       btn.disabled = true; btn.textContent = '送信中...';
-      setTimeout(() => {
-        document.getElementById('formWrap').style.display = 'none';
-        const ty = document.getElementById('thankYou');
-        ty.classList.add('visible');
-        launchConfetti();
-        ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 750);
+      const formData = new FormData(document.getElementById('feedbackForm'));
+      fetch('https://formspree.io/f/mvzvojje', {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      }).then(res => {
+        if (res.ok) {
+          document.getElementById('formWrap').style.display = 'none';
+          const ty = document.getElementById('thankYou');
+          ty.classList.add('visible');
+          launchConfetti();
+          ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          errEl.textContent = '⚠️ 送信に失敗しました。もう一度お試しください。';
+          errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = '✉️ 送信する';
+        }
+      }).catch(() => {
+        errEl.textContent = '⚠️ 通信エラーが発生しました。もう一度お試しください。';
+        errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = '✉️ 送信する';
+      });
     });
 
     function resetForm() {

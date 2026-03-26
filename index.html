@@ -654,17 +654,17 @@
               <div class="fb-row2">
                 <div class="form-group">
                   <label class="form-label" for="idx_age">年齢<span class="required">*</span></label>
-                  <input type="text" id="idx_age" class="form-input" placeholder="例：21歳、20代など" maxlength="30" required>
+                  <input type="text" id="idx_age" name="年齢" class="form-input" placeholder="例：21歳、20代など" maxlength="30" required>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="idx_gender">性別<span class="required">*</span></label>
-                  <input type="text" id="idx_gender" class="form-input" placeholder="例：男、女、その他など" maxlength="30" required>
+                  <input type="text" id="idx_gender" name="性別" class="form-input" placeholder="例：男、女、その他など" maxlength="30" required>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="idx_location">作ってほしい場所のご希望<span class="optional">（任意）</span></label>
-                <input type="text" id="idx_location" class="form-input" placeholder="例：長崎大学の近く、出島エリアなど" maxlength="100">
+                <input type="text" id="idx_location" name="場所のご希望" class="form-input" placeholder="例：長崎大学の近く、出島エリアなど" maxlength="100">
               </div>
 
               <div class="form-group">
@@ -672,7 +672,7 @@
                 <div style="background:linear-gradient(135deg,var(--purple-soft),var(--cyan-soft));border:1px solid rgba(124,58,237,0.18);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:0.8rem;color:var(--text-secondary);line-height:1.8;">
                   💬 <strong style="color:var(--purple);">ネガティブな意見も大歓迎！</strong>「ここが不満」「これはいらない」など本音をどうぞ。
                 </div>
-                <textarea id="idx_message" class="form-textarea" style="min-height:120px;" placeholder="良いことも悪いことも、なんでもどうぞ！批判・改善案・不満点も全部歓迎です。" maxlength="1000"></textarea>
+                <textarea id="idx_message" name="メッセージ" class="form-textarea" style="min-height:120px;" placeholder="良いことも悪いことも、なんでもどうぞ！批判・改善案・不満点も全部歓迎です。" maxlength="1000"></textarea>
               </div>
 
               <div id="idx_formError" style="display:none;color:var(--pink);font-size:0.84rem;margin-bottom:14px;padding:10px 14px;background:var(--pink-soft);border-radius:10px;">
@@ -860,13 +860,28 @@
       errEl.style.display = 'none';
       const btn = document.getElementById('idx_submitBtn');
       btn.disabled = true; btn.textContent = '送信中...';
-      setTimeout(() => {
-        document.getElementById('idxFormWrap').style.display = 'none';
-        const ty = document.getElementById('idx_thankYou');
-        ty.classList.add('visible');
-        launchConfetti();
-        ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 700);
+      const formData = new FormData(document.getElementById('idxFeedbackForm'));
+      fetch('https://formspree.io/f/mvzvojje', {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      }).then(res => {
+        if (res.ok) {
+          document.getElementById('idxFormWrap').style.display = 'none';
+          const ty = document.getElementById('idx_thankYou');
+          ty.classList.add('visible');
+          launchConfetti();
+          ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          errEl.textContent = '⚠️ 送信に失敗しました。もう一度お試しください。';
+          errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = '✉️ 送信する';
+        }
+      }).catch(() => {
+        errEl.textContent = '⚠️ 通信エラーが発生しました。もう一度お試しください。';
+        errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = '✉️ 送信する';
+      });
     });
 
     function idxResetForm() {
