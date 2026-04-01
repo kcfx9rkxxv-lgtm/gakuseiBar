@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>掲示板 |（名称募集中）</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== 掲示板ページ固有スタイル ===== */
+
+    /* 投稿カードのラッパー */
+    .bbs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* 1件の質問＋返信をまとめるカード */
+    .bbs-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .bbs-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    /* 質問部分 */
+    .bbs-question {
+      padding: 26px 28px 20px;
+      border-bottom: 1px dashed rgba(124,58,237,0.12);
+    }
+
+    /* 質問のヘッダー（名前・日付） */
+    .bbs-question-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* 質問者アイコン */
+    .bbs-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* 質問者の名前 */
+    .bbs-name {
+      font-weight: 900;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    /* 投稿日 */
+    .bbs-date {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    /* 質問テキスト本文 */
+    .bbs-message {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* 返信部分 */
+    .bbs-reply {
+      padding: 20px 28px 24px;
+      background: linear-gradient(135deg, var(--purple-soft), rgba(252,228,236,0.4));
+    }
+
+    /* 返信ヘッダー（スタッフラベル） */
+    .bbs-reply-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    /* スタッフバッジ */
+    .bbs-staff-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 50px;
+      letter-spacing: 0.04em;
+    }
+
+    /* 返信テキスト */
+    .bbs-reply-text {
+      font-size: 0.93rem;
+      color: var(--text);
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* 返信なし（準備中）の表示 */
+    .bbs-reply-pending {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      background: #f3f4f6;
+      padding: 8px 18px;
+      border-radius: 50px;
+    }
+
+    /* ローディングスピナー */
+    .bbs-loading {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+
+    .bbs-spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid var(--purple-soft);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* エラー表示 */
+    .bbs-error {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .bbs-error-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    /* 投稿ゼロ件のとき */
+    .bbs-empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+
+    .bbs-empty-icon {
+      font-size: 3.5rem;
+      display: block;
+      margin-bottom: 20px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    /* 掲示板の説明ボックス */
+    .bbs-intro {
+      background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
+      border: 1.5px solid rgba(124,58,237,0.15);
+      border-radius: 20px;
+      padding: 32px 28px;
+      text-align: center;
+      margin-bottom: 48px;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .bbs-intro-emoji {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 12px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .bbs-intro-title {
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: 900;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .bbs-intro-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    /* 質問番号バッジ */
+    .bbs-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 900;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+      .bbs-question,
+      .bbs-reply {
+        padding: 20px 18px;
+      }
+
+      .bbs-date {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== ナビゲーション ===== -->
+  <nav>
+    <a href="index.html" class="nav-logo"><span class="emoji">🍺</span>（名称募集中）</a>
+    <ul class="nav-links">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="menu.html">メニュー・料金</a></li>
+      <li><a href="facilities.html">店内設備</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li><a href="recruit.html">バイト募集</a></li>
+      <li><a href="feedback.html">ご意見</a></li>
+      <li><a href="bbs.html" class="active">掲示板</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <!-- ===== モバイルメニュー ===== -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">🏠 TOP</a>
+    <a href="menu.html">🍹 メニュー・料金</a>
+    <a href="facilities.html">🎤 店内設備</a>
+    <a href="access.html">📍 アクセス</a>
+    <a href="recruit.html">💼 バイト募集</a>
+    <a href="feedback.html">💬 ご意見・ご要望</a>
+    <a href="bbs.html" class="active">📋 掲示板</a>
+  </div>
+
+  <main>
+
+    <!-- ===== ページヘッダー ===== -->
+    <header class="page-header">
+      <div class="page-header-bg"></div>
+      <div class="page-header-orb" style="width:320px;height:320px;background:radial-gradient(circle,rgba(233,30,140,0.2),transparent);top:-80px;right:-80px;"></div>
+      <div class="page-header-orb" style="width:260px;height:260px;background:radial-gradient(circle,rgba(124,58,237,0.18),transparent);bottom:-60px;left:-50px;"></div>
+      <div class="page-header-content">
+        <h1>📋 掲示板</h1>
+        <p>スタッフへの質問・お問い合わせへの回答を掲載しています</p>
+      </div>
+    </header>
+
+    <!-- ===== 掲示板メインセクション ===== -->
+    <section class="section">
+      <div class="container">
+
+        <!-- 掲示板の説明 -->
+        <div class="bbs-intro reveal">
+          <span class="bbs-intro-emoji">💬</span>
+          <div class="bbs-intro-title">よくある質問・Q&amp;A</div>
+          <p class="bbs-intro-desc">
+            皆さんからいただいた質問にスタッフが回答しています。<br>
+            質問は<a href="feedback.html" style="color:var(--purple);font-weight:700;">ご意見・ご要望フォーム</a>からお気軽にどうぞ！
+          </p>
+        </div>
+
+        <!-- 投稿一覧（JavaScriptで動的に挿入） -->
+        <div id="bbsList" class="bbs-list">
+          <!-- ローディング表示（データ取得中） -->
+          <div class="bbs-loading" id="bbsLoading">
+            <div class="bbs-spinner"></div>
+            <p>読み込み中...</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== フッター ===== -->
+  <footer>
+    <span class="footer-logo">（名称募集中）</span>
+    <ul class="footer-nav">
+      <li><a href="index.html">TOP</a></li>
+      <li><a href="menu.html">メニュー</a></li>
+      <li><a href="facilities.html">設備</a></li>
+      <li><a href="access.html">アクセス</a></li>
+      <li><a href="recruit.html">バイト募集</a></li>
+      <li><a href="feedback.html">ご意見</a></li>
+      <li><a href="bbs.html">掲示板</a></li>
+    </ul>
+    <div class="footer-info">長崎市内 ｜ 2027年4月 開業予定</div>
+  </footer>
+
+  <script src="common.js"></script>
+  <script>
+    /**
+     * 掲示板データの取得と表示
+     * Vercel サーバーレス関数（/api/notion）を経由してNotionからデータを取得する
+     */
+    (async function () {
+      const listEl = document.getElementById('bbsList');
+      const loadingEl = document.getElementById('bbsLoading');
+
+      /**
+       * 日付を「YYYY年MM月DD日」形式にフォーマットする
+       * @param {string|null} dateStr - ISO形式の日付文字列
+       * @returns {string} フォーマット済み日付文字列
+       */
+      function formatDate(dateStr) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        // タイムゾーンのずれを補正（UTC→JST）
+        const jst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+        const y = jst.getUTCFullYear();
+        const m = String(jst.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(jst.getUTCDate()).padStart(2, '0');
+        return `${y}年${m}月${day}日`;
+      }
+
+      /**
+       * XSSを防ぐためのHTML文字列エスケープ
+       * @param {string} str - エスケープ対象の文字列
+       * @returns {string} エスケープ済み文字列
+       */
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      /**
+       * 1件の投稿カードHTMLを生成する
+       * @param {Object} post - 投稿データ
+       * @param {number} index - 表示順のインデックス（番号バッジに使用）
+       * @returns {string} カードのHTML文字列
+       */
+      function renderCard(post, index) {
+        // 名前が空のときは「匿名」と表示
+        const name = post.name ? escapeHtml(post.name) : '匿名';
+        const message = escapeHtml(post.message || '');
+        const dateStr = formatDate(post.date);
+
+        // 返信がある場合とない場合で表示を切り替え
+        const replyHtml = post.reply
+          ? `<p class="bbs-reply-text">${escapeHtml(post.reply)}</p>`
+          : `<span class="bbs-reply-pending">⏳ 返信準備中</span>`;
+
+        return `
+          <article class="bbs-card reveal delay-${Math.min(index % 4 + 1, 4)}">
+            <!-- 質問部分 -->
+            <div class="bbs-question">
+              <div class="bbs-question-header">
+                <div class="bbs-avatar">🙋</div>
+                <span class="bbs-name">${name}</span>
+                <span class="bbs-number">${index + 1}</span>
+                ${dateStr ? `<span class="bbs-date">${dateStr}</span>` : ''}
+              </div>
+              <p class="bbs-message">${message}</p>
+            </div>
+            <!-- 返信部分 -->
+            <div class="bbs-reply">
+              <div class="bbs-reply-header">
+                <span class="bbs-staff-badge">🍺 スタッフより</span>
+              </div>
+              ${replyHtml}
+            </div>
+          </article>
+        `;
+      }
+
+      try {
+        // Vercel サーバーレス関数経由でNotionのデータを取得
+        const res = await fetch('/api/notion', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTPエラー: ${res.status}`);
+        }
+
+        const data = await res.json();
+        const posts = data.posts || [];
+
+        // ローディング表示を消去
+        loadingEl.remove();
+
+        if (posts.length === 0) {
+          // 投稿が0件の場合
+          listEl.innerHTML = `
+            <div class="bbs-empty">
+              <span class="bbs-empty-icon">📭</span>
+              <p>まだ投稿がありません。<br>最初の質問をお待ちしています！</p>
+            </div>
+          `;
+          return;
+        }
+
+        // 各投稿カードをHTMLとして挿入
+        listEl.innerHTML = posts.map((post, i) => renderCard(post, i)).join('');
+
+        // スクロールアニメーションを再適用（動的に追加した要素にも適用する）
+        const newRevealEls = listEl.querySelectorAll('.reveal');
+        if (newRevealEls.length > 0) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+          newRevealEls.forEach(el => observer.observe(el));
+        }
+
+      } catch (err) {
+        // エラー発生時のフォールバック表示
+        console.error('掲示板データの取得に失敗しました:', err);
+        loadingEl.remove();
+        listEl.innerHTML = `
+          <div class="bbs-error">
+            <span class="bbs-error-icon">⚠️</span>
+            <p>データの読み込みに失敗しました。<br>しばらく経ってから再度お試しください。</p>
+          </div>
+        `;
+      }
+    })();
+  </script>
+
+</body>
+</html>
