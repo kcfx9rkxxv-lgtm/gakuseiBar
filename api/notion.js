@@ -92,7 +92,7 @@ export default async function handler(req, res) {
       return {
         id: page.id,
         // 質問者の名前（タイトルプロパティ）
-        name: getText(page.properties['質問者の名前']),
+        name: getText(page.properties['質問者']),
         // メッセージ内容
         message: getText(page.properties['メッセージ内容']),
         // 管理者の返信
