@@ -216,6 +216,20 @@
       line-height: 1.85;
     }
 
+    /* 希望出展場所タグ */
+    .bbs-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 50px;
+      margin-top: 10px;
+    }
+
     /* 質問番号バッジ */
     .bbs-number {
       display: inline-flex;
@@ -386,6 +400,11 @@
           ? `<p class="bbs-reply-text">${escapeHtml(post.reply)}</p>`
           : `<span class="bbs-reply-pending">⏳ 返信準備中</span>`;
 
+        // 希望出展場所がある場合のみ表示
+        const locationHtml = post.location
+          ? `<div><span class="bbs-location">📍 希望出展場所：${escapeHtml(post.location)}</span></div>`
+          : '';
+
         return `
           <article class="bbs-card reveal delay-${Math.min(index % 4 + 1, 4)}">
             <!-- 質問部分 -->
@@ -397,6 +416,7 @@
                 ${dateStr ? `<span class="bbs-date">${dateStr}</span>` : ''}
               </div>
               <p class="bbs-message">${message}</p>
+              ${locationHtml}
             </div>
             <!-- 返信部分 -->
             <div class="bbs-reply">

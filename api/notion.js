@@ -97,6 +97,8 @@ export default async function handler(req, res) {
         message: getText(page.properties['メッセージ内容']),
         // 管理者の返信
         reply: getText(page.properties['管理者の返信']),
+        // 希望出展場所
+        location: getText(page.properties['希望出展場所']),
         // 公開日
         date: getDate(page.properties['公開日']),
       };
