@@ -400,9 +400,9 @@
           ? `<p class="bbs-reply-text">${escapeHtml(post.reply)}</p>`
           : `<span class="bbs-reply-pending">⏳ 返信準備中</span>`;
 
-        // 希望出展場所がある場合のみ表示
+        // 希望出店場所がある場合のみ表示
         const locationHtml = post.location
-          ? `<div><span class="bbs-location">📍 希望出展場所：${escapeHtml(post.location)}</span></div>`
+          ? `<div><span class="bbs-location">📍 希望出店場所：${escapeHtml(post.location)}</span></div>`
           : '';
 
         return `
