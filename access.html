@@ -15,7 +15,7 @@
     @media (max-width: 640px) { .access-grid { grid-template-columns: 1fr; } }
 
     .info-card {
-      background: white;
+      background: #1A1A1A;
       border: 1.5px solid var(--card-border);
       border-radius: 20px;
       padding: 32px 26px;
@@ -56,7 +56,7 @@
     /* Hours display */
     .hours-display {
       background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
-      border: 1px solid rgba(124,58,237,0.15);
+      border: 1px solid rgba(201,168,76,0.15);
       border-radius: 14px;
       padding: 22px 18px;
       text-align: center;
@@ -79,7 +79,7 @@
 
     .hours-table td {
       padding: 9px 0;
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 1px solid #2A2A2A;
       font-size: 0.86rem;
     }
 
@@ -89,8 +89,8 @@
 
     /* Map placeholder */
     .map-placeholder {
-      background: linear-gradient(135deg, #f0e8ff, #fce4ec);
-      border: 1.5px solid rgba(124,58,237,0.15);
+      background: linear-gradient(135deg, #1A1A1A, #0D0D0D);
+      border: 1.5px solid rgba(201,168,76,0.15);
       border-radius: 20px;
       height: 300px;
       position: relative;
@@ -117,8 +117,8 @@
 
     /* Opening banner */
     .opening-banner {
-      background: linear-gradient(135deg, var(--yellow-soft), #fef3c7);
-      border: 1.5px solid rgba(245,158,11,0.25);
+      background: linear-gradient(135deg, var(--yellow-soft), rgba(201,168,76,0.08));
+      border: 1.5px solid rgba(201,168,76,0.25);
       border-radius: 20px;
       padding: 40px 30px;
       text-align: center;
@@ -126,19 +126,10 @@
       overflow: hidden;
     }
 
-    .opening-banner::before {
-      content: '🎉';
-      position: absolute;
-      font-size: 10rem;
-      right: -20px; top: -20px;
-      opacity: 0.05;
-      pointer-events: none;
-    }
-
     .opening-label {
       display: inline-block;
       background: linear-gradient(135deg, var(--yellow), var(--orange));
-      color: white;
+      color: #0D0D0D;
       font-weight: 900;
       font-size: 0.78rem;
       padding: 5px 18px;
@@ -167,7 +158,7 @@
       align-items: flex-start;
       gap: 13px;
       padding: 14px 0;
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 1px solid #2A2A2A;
     }
 
     .entry-row:last-child { border-bottom: none; }
@@ -180,7 +171,7 @@
 <body>
 
   <nav>
-    <a href="index.html" class="nav-logo"><span class="emoji">🍺</span>（名称募集中）</a>
+    <a href="index.html" class="nav-logo">（名称募集中）</a>
     <ul class="nav-links">
       <li><a href="index.html">TOP</a></li>
       <li><a href="menu.html">メニュー・料金</a></li>
@@ -194,21 +185,21 @@
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html">🏠 TOP</a>
-    <a href="menu.html">🍹 メニュー・料金</a>
-    <a href="facilities.html">🎤 店内設備</a>
-    <a href="access.html" class="active">📍 アクセス</a>
-    <a href="recruit.html">💼 バイト募集</a>
-    <a href="feedback.html">💬 ご意見・ご要望</a>
-    <a href="bbs.html">📋 掲示板</a>
+    <a href="index.html">TOP</a>
+    <a href="menu.html">メニュー・料金</a>
+    <a href="facilities.html">店内設備</a>
+    <a href="access.html" class="active">アクセス</a>
+    <a href="recruit.html">バイト募集</a>
+    <a href="feedback.html">ご意見・ご要望</a>
+    <a href="bbs.html">掲示板</a>
   </div>
 
   <header class="page-header">
     <div class="page-header-bg"></div>
-    <div class="page-header-orb" style="width:320px;height:320px;background:radial-gradient(circle,rgba(8,145,178,0.2),transparent);top:-90px;left:-80px;"></div>
-    <div class="page-header-orb" style="width:260px;height:260px;background:radial-gradient(circle,rgba(245,158,11,0.18),transparent);bottom:-60px;right:-50px;"></div>
+    <div class="page-header-orb" style="width:320px;height:320px;background:radial-gradient(circle,rgba(184,176,160,0.2),transparent);top:-90px;left:-80px;"></div>
+    <div class="page-header-orb" style="width:260px;height:260px;background:radial-gradient(circle,rgba(201,168,76,0.18),transparent);bottom:-60px;right:-50px;"></div>
     <div class="page-header-content">
-      <h1 class="gradient-text">📍 アクセス・営業時間</h1>
+      <h1 class="gradient-text">アクセス・営業時間</h1>
       <p>長崎市内に2027年4月、オープン予定！</p>
     </div>
   </header>
@@ -219,7 +210,7 @@
     <section class="section" style="padding-bottom:30px;">
       <div class="container">
         <div class="opening-banner reveal">
-          <div class="opening-label">🗓️ GRAND OPEN</div>
+          <div class="opening-label">GRAND OPEN</div>
           <div class="opening-date-big">2027年4月</div>
           <div class="opening-sub">
             長崎市内にて開業予定！<br>
@@ -234,30 +225,26 @@
     <section class="section" style="padding-top:30px;">
       <div class="container">
         <div class="section-heading reveal">
-          <h2>🗺️ 場所・営業情報</h2>
+          <h2>場所・営業情報</h2>
           <div class="divider"></div>
         </div>
 
         <div class="access-grid">
           <div class="info-card reveal delay-1">
-            <span class="info-card-icon">📍</span>
             <div class="info-card-title">場所・アクセス</div>
             <div class="info-row">
-              <span class="info-row-icon">🏙️</span>
               <div class="info-row-text">
                 <strong>長崎市内</strong>
                 <span class="note">詳細は開業時に公開予定</span>
               </div>
             </div>
             <div class="info-row">
-              <span class="info-row-icon">🚌</span>
               <div class="info-row-text">
                 アクセス情報は決定次第お知らせします
                 <span class="note">学生が通いやすい立地を選定中</span>
               </div>
             </div>
             <div class="info-row">
-              <span class="info-row-icon">💬</span>
               <div class="info-row-text">
                 場所のご希望がある方はご意見フォームへ！
                 <span class="note">「ここに作ってほしい」もお待ちしています</span>
@@ -266,7 +253,6 @@
           </div>
 
           <div class="info-card reveal delay-2">
-            <span class="info-card-icon">🕐</span>
             <div class="info-card-title">営業時間</div>
             <div class="hours-display">
               <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;font-weight:700;">営業時間</div>
@@ -278,7 +264,7 @@
                   <span class="hours-time">翌2:00</span>
                 </div>
               </div>
-              <div style="height:1px;background:rgba(124,58,237,0.12);margin:10px 0;"></div>
+              <div style="height:1px;background:rgba(201,168,76,0.12);margin:10px 0;"></div>
               <div>
                 <div style="font-size:0.72rem;color:var(--pink);margin-bottom:4px;font-weight:700;">週末（金・土・祝前日）</div>
                 <div style="display:flex;align-items:center;justify-content:center;">
@@ -312,27 +298,26 @@
     <section class="section section-alt">
       <div class="container">
         <div class="section-heading reveal">
-          <h2>🗾 エリア</h2>
+          <h2>エリア</h2>
           <div class="divider"></div>
         </div>
 
         <div class="map-placeholder reveal">
           <svg class="map-svg-bg" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 150 Q200 75 400 150 Q600 225 800 150" stroke="rgba(124,58,237,0.4)" stroke-width="2" fill="none"/>
-            <path d="M0 190 Q200 115 400 190 Q600 265 800 190" stroke="rgba(233,30,140,0.2)" stroke-width="1.5" fill="none"/>
-            <circle cx="400" cy="150" r="55" stroke="rgba(124,58,237,0.35)" stroke-width="1.5" fill="none"/>
-            <circle cx="400" cy="150" r="95" stroke="rgba(124,58,237,0.18)" stroke-width="1" fill="none"/>
-            <circle cx="400" cy="150" r="145" stroke="rgba(124,58,237,0.1)" stroke-width="1" fill="none"/>
-            <line x1="0" y1="75" x2="800" y2="75" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
-            <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
-            <line x1="0" y1="225" x2="800" y2="225" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
-            <line x1="200" y1="0" x2="200" y2="300" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
-            <line x1="400" y1="0" x2="400" y2="300" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
-            <line x1="600" y1="0" x2="600" y2="300" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
+            <path d="M0 150 Q200 75 400 150 Q600 225 800 150" stroke="rgba(201,168,76,0.4)" stroke-width="2" fill="none"/>
+            <path d="M0 190 Q200 115 400 190 Q600 265 800 190" stroke="rgba(201,168,76,0.2)" stroke-width="1.5" fill="none"/>
+            <circle cx="400" cy="150" r="55" stroke="rgba(201,168,76,0.35)" stroke-width="1.5" fill="none"/>
+            <circle cx="400" cy="150" r="95" stroke="rgba(201,168,76,0.18)" stroke-width="1" fill="none"/>
+            <circle cx="400" cy="150" r="145" stroke="rgba(201,168,76,0.1)" stroke-width="1" fill="none"/>
+            <line x1="0" y1="75" x2="800" y2="75" stroke="rgba(245,240,232,0.04)" stroke-width="1"/>
+            <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(245,240,232,0.04)" stroke-width="1"/>
+            <line x1="0" y1="225" x2="800" y2="225" stroke="rgba(245,240,232,0.04)" stroke-width="1"/>
+            <line x1="200" y1="0" x2="200" y2="300" stroke="rgba(245,240,232,0.04)" stroke-width="1"/>
+            <line x1="400" y1="0" x2="400" y2="300" stroke="rgba(245,240,232,0.04)" stroke-width="1"/>
+            <line x1="600" y1="0" x2="600" y2="300" stroke="rgba(245,240,232,0.04)" stroke-width="1"/>
           </svg>
 
           <div class="map-content">
-            <span class="map-pin">📍</span>
             <div class="map-title">長崎市内</div>
             <div class="map-desc">
               詳しい住所・アクセス方法は開業時公開予定。<br>
@@ -348,33 +333,29 @@
     <section class="section">
       <div class="container container-sm">
         <div class="section-heading reveal">
-          <h2>📋 入店について</h2>
+          <h2>入店について</h2>
           <div class="divider"></div>
         </div>
         <div class="glass-card reveal">
           <div class="entry-row">
-            <span class="entry-row-icon">🎓</span>
             <div class="entry-row-text">
               <strong>学生優遇・どなたでも入店OK</strong>
               <span class="note">18〜23歳の学生が主役の場所ですが、年齢制限はありません。</span>
             </div>
           </div>
           <div class="entry-row">
-            <span class="entry-row-icon">🏷️</span>
             <div class="entry-row-text">
               <strong>学生料金の適用について</strong>
               <span class="note">23歳以下の飲み放題割引には学生証等の提示をお願いする場合があります。</span>
             </div>
           </div>
           <div class="entry-row">
-            <span class="entry-row-icon">🎫</span>
             <div class="entry-row-text">
               <strong>チャージ：お一人300円（全員一律）</strong>
               <span class="note">カラオケ：1〜2名 お一人200円 ／ 3名以上 1グループ500円固定</span>
             </div>
           </div>
           <div class="entry-row">
-            <span class="entry-row-icon">🚫</span>
             <div class="entry-row-text">
               <strong>未成年の飲酒は法律で禁じられています</strong>
               <span class="note">20歳未満の方へのアルコール提供はいたしません</span>

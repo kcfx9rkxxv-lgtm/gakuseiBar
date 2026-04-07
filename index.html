@@ -6,195 +6,205 @@
   <title>（名称募集中）| 学生特化バー 長崎</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ===== HERO ===== */
-    .hero {
-      min-height: 100vh;
+    /* ===== HERO SLIDER ===== */
+    .hero-slider {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      padding-top: 65px;
+      box-sizing: border-box;
+    }
+
+    .slider-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
-      padding-top: 65px;
-      background: linear-gradient(135deg, #fdf4ff 0%, #f0e8ff 40%, #fce4ec 70%, #fff8f0 100%);
     }
 
-    /* Color blobs */
-    .blob {
+    .slide.active {
+      opacity: 1;
+      z-index: 2;
+    }
+
+    .slide.prev {
+      opacity: 0.25;
+      z-index: 1;
+    }
+
+    /* Dummy gradient backgrounds for each slide (replace with real images later) */
+    .slide-1 { background: linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 40%, #111111 100%); }
+    .slide-2 { background: linear-gradient(160deg, #0D0D0D 0%, #1C1500 50%, #0D0D0D 100%); }
+    .slide-3 { background: linear-gradient(120deg, #0A0A0A 0%, #1A1A10 50%, #0D0D0D 100%); }
+    .slide-4 { background: linear-gradient(145deg, #0D0D0D 0%, #161616 50%, #1A1A1A 100%); }
+
+    /* Gold accent stripe on each slide */
+    .slide-1::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.12) 0%, transparent 60%); }
+    .slide-2::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 70% 40%, rgba(232,196,106,0.14) 0%, transparent 60%); }
+    .slide-3::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.10) 0%, transparent 60%); }
+    .slide-4::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 20% 30%, rgba(232,196,106,0.12) 0%, transparent 60%); }
+
+    .slide-overlay {
       position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
     }
 
-    .blob-1 {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(233,30,140,0.18), transparent 70%);
-      top: -150px; left: -100px;
-      animation: float 9s ease-in-out infinite;
-    }
-
-    .blob-2 {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(124,58,237,0.15), transparent 70%);
-      bottom: -100px; right: -80px;
-      animation: float 11s ease-in-out infinite 3s;
-    }
-
-    .blob-3 {
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(245,158,11,0.18), transparent 70%);
-      top: 40%; left: 60%;
-      animation: float 13s ease-in-out infinite 6s;
-    }
-
-    /* Floating particles */
-    .particle {
-      position: absolute;
-      animation: floatParticle linear infinite;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .hero-content {
+    .slide-content-center {
       position: relative;
-      z-index: 5;
+      z-index: 3;
       text-align: center;
-      padding: 50px 20px 60px;
-      max-width: 860px;
-      width: 100%;
+      padding: 0 20px;
     }
 
-    .opening-pill {
+    .slide-label {
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      color: #C9A84C;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      border: 1px solid rgba(201,168,76,0.4);
       display: inline-block;
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      color: white;
-      font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
-      font-weight: 900;
-      font-size: clamp(1rem, 2.5vw, 1.3rem);
-      padding: 12px 34px;
+      padding: 6px 20px;
       border-radius: 50px;
-      margin-bottom: 30px;
-      animation: pulseBig 2.5s ease-in-out infinite;
-      letter-spacing: 0.04em;
-      box-shadow: 0 6px 25px rgba(245,158,11,0.45);
-      border: 3px solid rgba(255,255,255,0.5);
     }
 
-    .hero-title {
-      font-size: clamp(1.8rem, 5.5vw, 3.8rem);
+    .slide-title {
+      font-size: clamp(2rem, 6vw, 4.5rem);
       font-weight: 900;
-      line-height: 1.25;
-      margin-bottom: 28px;
-      color: var(--text);
-    }
-
-    .hero-title .accent {
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .catch-wrap {
-      margin: 10px 0 32px;
-      background: linear-gradient(135deg, #fff, #fef0f8);
-      border: 3px solid var(--pink);
-      border-radius: 28px;
-      padding: 30px 36px 24px;
-      display: inline-block;
-      box-shadow: 0 8px 40px rgba(233,30,140,0.18), inset 0 0 0 1px rgba(255,255,255,0.8);
-    }
-
-    .catch-label {
-      font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
-      font-size: 1rem;
-      font-weight: 900;
-      color: var(--pink);
-      margin-bottom: 8px;
-      letter-spacing: 0.1em;
-    }
-
-    .catch-time {
-      font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
-      font-weight: 900;
-      font-size: clamp(1.4rem, 4vw, 2.2rem);
-      color: #e91e8c;
-      letter-spacing: 0.06em;
+      color: #F5F0E8;
       line-height: 1.2;
-      display: block;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.6);
     }
 
-    .catch-main {
-      font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
-      font-weight: 900;
-      font-size: clamp(3.2rem, 11vw, 7.5rem);
-      line-height: 1.05;
-      color: #e91e8c;
-      display: block;
-      white-space: nowrap;
-      text-shadow:
-        3px 3px 0 rgba(233,30,140,0.12),
-        0 4px 25px rgba(233,30,140,0.22);
-      letter-spacing: -0.02em;
+    .slide-price {
+      color: #C9A84C;
+      font-family: 'Poppins', sans-serif;
     }
 
-    .catch-sub {
-      font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
-      font-size: clamp(1.4rem, 4vw, 2.2rem);
-      font-weight: 900;
-      color: var(--purple);
-      margin-top: 8px;
-      letter-spacing: 0.06em;
-    }
-
-    .student-badge {
-      display: inline-flex;
+    /* Arrow buttons */
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(13,13,13,0.7);
+      border: 1px solid rgba(201,168,76,0.4);
+      color: #C9A84C;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
       align-items: center;
-      gap: 10px;
-      background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
-      border: 2px solid rgba(124,58,237,0.25);
-      padding: 12px 30px;
-      border-radius: 50px;
-      font-weight: 900;
-      font-size: clamp(0.9rem, 2.5vw, 1.15rem);
-      color: var(--purple);
-      margin: 22px 0;
-      box-shadow: 0 4px 20px rgba(124,58,237,0.15);
+      justify-content: center;
     }
 
-    .hero-desc {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      line-height: 1.9;
-      margin-bottom: 35px;
+    .slider-btn:hover {
+      background: rgba(201,168,76,0.2);
+      border-color: #C9A84C;
+    }
+
+    .slider-btn-prev { left: 20px; }
+    .slider-btn-next { right: 20px; }
+
+    /* Dots */
+    .slider-dots {
+      position: absolute;
+      bottom: 130px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+    }
+
+    .slider-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.6);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 0;
+    }
+
+    .slider-dot.active {
+      background: #C9A84C;
+      border-color: #C9A84C;
+      transform: scale(1.3);
+    }
+
+    /* CTA bar at bottom */
+    .hero-cta-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: linear-gradient(to top, rgba(13,13,13,0.95) 0%, rgba(13,13,13,0.7) 70%, transparent 100%);
+      padding: 30px 20px 36px;
+      text-align: center;
+    }
+
+    .hero-catch {
+      font-size: 0.95rem;
+      color: #B8B0A0;
+      line-height: 1.8;
+      margin-bottom: 20px;
     }
 
     .hero-btns {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
     }
 
-    .scroll-down {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      color: var(--text-muted);
-      font-size: 0.72rem;
-      animation: bounce 2s ease-in-out infinite;
+    /* Instagram button */
+    .btn-instagram {
+      background: transparent;
+      border: 2px solid #C9A84C;
+      color: #C9A84C;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 900;
+      font-size: 0.95rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-block;
+      letter-spacing: 0.02em;
     }
 
-    .scroll-arrow {
-      width: 18px; height: 18px;
-      border-right: 2px solid var(--text-muted);
-      border-bottom: 2px solid var(--text-muted);
-      transform: rotate(45deg);
+    .btn-instagram:hover {
+      background: #C9A84C;
+      color: #0D0D0D;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(201,168,76,0.3);
+    }
+
+    @media (max-width: 768px) {
+      .slider-btn { width: 38px; height: 38px; font-size: 1rem; }
+      .slider-btn-prev { left: 10px; }
+      .slider-btn-next { right: 10px; }
+      .hero-cta-bar { padding: 20px 16px 28px; }
+      .hero-catch { font-size: 0.85rem; }
     }
 
     /* ===== PRICE SECTION ===== */
@@ -225,31 +235,31 @@
       flex: 1;
       min-width: 235px;
       max-width: 320px;
-      background: white;
+      background: #1A1A1A;
       border-radius: 22px;
       padding: 36px 28px;
       text-align: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 6px 30px rgba(124,58,237,0.1);
+      box-shadow: 0 6px 30px rgba(0,0,0,0.4);
       transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .price-card:hover {
       transform: translateY(-10px);
-      box-shadow: 0 20px 50px rgba(124,58,237,0.2);
+      box-shadow: 0 20px 50px rgba(201,168,76,0.2);
     }
 
     .price-card.featured {
-      background: linear-gradient(135deg, #fdf4ff, #fce4ec);
-      border: 2px solid rgba(233,30,140,0.25);
+      background: linear-gradient(135deg, #1A1A1A, #1C1500);
+      border: 2px solid rgba(201,168,76,0.25);
     }
 
     .featured-ribbon {
       position: absolute;
       top: 14px; right: -26px;
       background: linear-gradient(135deg, var(--pink), var(--purple));
-      color: white;
+      color: #F5F0E8;
       font-weight: 900;
       font-size: 0.7rem;
       padding: 5px 36px;
@@ -292,13 +302,13 @@
       margin-top: 14px;
       padding: 9px 14px;
       background: var(--yellow-soft);
-      border: 1px solid rgba(245,158,11,0.3);
+      border: 1px solid rgba(201,168,76,0.3);
       border-radius: 10px;
       font-size: 0.85rem;
       color: var(--text-secondary);
     }
 
-    .price-beer-opt strong { color: #b45309; }
+    .price-beer-opt strong { color: #C9A84C; }
 
     .price-note {
       margin-top: 30px;
@@ -310,7 +320,7 @@
     /* ===== EMBEDDED FEEDBACK ===== */
     .feedback-section {
       padding: 90px 20px;
-      background: white;
+      background: #1A1A1A;
       position: relative;
     }
 
@@ -329,14 +339,13 @@
 
     .feedback-banner {
       background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
-      border: 1px solid rgba(124,58,237,0.15);
+      border: 1px solid rgba(201,168,76,0.15);
       border-radius: 20px;
       padding: 30px 28px 24px;
       text-align: center;
       margin-bottom: 32px;
     }
 
-    .fb-banner-emoji { font-size: 3rem; margin-bottom: 10px; display: block; animation: float 4s ease-in-out infinite; }
     .fb-banner-title {
       font-size: 1.4rem; font-weight: 900;
       background: linear-gradient(135deg, var(--purple), var(--pink));
@@ -347,7 +356,7 @@
     .fb-banner-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8; }
 
     .fb-form-card {
-      background: white;
+      background: #1A1A1A;
       border: 1px solid var(--card-border);
       border-radius: 20px;
       padding: 36px 32px;
@@ -356,7 +365,6 @@
 
     @media (max-width: 480px) {
       .fb-form-card { padding: 24px 18px; }
-      .catch-wrap { padding: 20px 18px 16px; }
     }
 
     .fb-row2 {
@@ -372,7 +380,7 @@
     .submit-btn {
       width: 100%;
       background: linear-gradient(135deg, var(--pink), var(--purple));
-      color: white;
+      color: #F5F0E8;
       border: none;
       border-radius: 14px;
       padding: 16px;
@@ -381,7 +389,7 @@
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(233,30,140,0.3);
+      box-shadow: 0 4px 20px rgba(201,168,76,0.3);
       position: relative;
       overflow: hidden;
     }
@@ -390,11 +398,11 @@
       content: '';
       position: absolute;
       top: 0; left: -100%; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      background: linear-gradient(90deg, transparent, rgba(245,240,232,0.15), transparent);
       transition: left 0.5s;
     }
 
-    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(233,30,140,0.45); }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.45); }
     .submit-btn:hover::before { left: 100%; }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
@@ -407,7 +415,6 @@
 
     .thankyou-wrap.visible { display: block; }
 
-    .ty-icon { font-size: 4.5rem; margin-bottom: 16px; display: block; animation: bounce 1.5s ease-in-out infinite; }
     .ty-title {
       font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 12px;
       background: linear-gradient(135deg, var(--pink), var(--purple));
@@ -434,7 +441,7 @@
     }
 
     .feature-item {
-      background: white;
+      background: #1A1A1A;
       border-radius: 18px;
       padding: 30px 20px;
       text-align: center;
@@ -462,7 +469,7 @@
     .feature-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.75; }
 
     /* ===== PAGE NAV ===== */
-    .page-nav-section { padding: 80px 20px; background: white; }
+    .page-nav-section { padding: 80px 20px; background: #1A1A1A; }
 
     .page-nav-grid {
       display: grid;
@@ -474,12 +481,12 @@
       display: block;
       text-decoration: none;
       color: var(--text);
-      background: white;
+      background: #1A1A1A;
       border: 1.5px solid var(--card-border);
       border-radius: 16px;
       padding: 26px 14px 22px;
       text-align: center;
-      box-shadow: 0 2px 12px rgba(124,58,237,0.06);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
@@ -497,8 +504,8 @@
 
     .page-nav-card:hover {
       transform: translateY(-6px);
-      border-color: rgba(124,58,237,0.25);
-      box-shadow: 0 12px 35px rgba(124,58,237,0.15);
+      border-color: rgba(201,168,76,0.25);
+      box-shadow: 0 12px 35px rgba(201,168,76,0.15);
     }
 
     .page-nav-card:hover::after { transform: scaleX(1); }
@@ -510,8 +517,8 @@
     /* ===== INFO BAR ===== */
     .info-bar {
       background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
-      border-top: 1px solid rgba(124,58,237,0.12);
-      border-bottom: 1px solid rgba(233,30,140,0.12);
+      border-top: 1px solid rgba(201,168,76,0.12);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
       padding: 18px 20px;
       display: flex;
       justify-content: center;
@@ -554,7 +561,7 @@
 <body>
 
   <nav>
-    <a href="index.html" class="nav-logo"><span class="emoji">🍺</span>（名称募集中）</a>
+    <a href="index.html" class="nav-logo">（名称募集中）</a>
     <ul class="nav-links">
       <li><a href="index.html" class="active">TOP</a></li>
       <li><a href="menu.html">メニュー・料金</a></li>
@@ -568,79 +575,90 @@
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html" class="active">🏠 TOP</a>
-    <a href="menu.html">🍹 メニュー・料金</a>
-    <a href="facilities.html">🎤 店内設備</a>
-    <a href="access.html">📍 アクセス</a>
-    <a href="recruit.html">💼 バイト募集</a>
-    <a href="feedback.html">💬 ご意見・ご要望</a>
-    <a href="bbs.html">📋 掲示板</a>
+    <a href="index.html" class="active">TOP</a>
+    <a href="menu.html">メニュー・料金</a>
+    <a href="facilities.html">店内設備</a>
+    <a href="access.html">アクセス</a>
+    <a href="recruit.html">バイト募集</a>
+    <a href="feedback.html">ご意見・ご要望</a>
+    <a href="bbs.html">掲示板</a>
   </div>
 
   <main>
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
-      <div class="blob blob-3"></div>
-      <div id="particles"></div>
-
-      <div class="hero-content">
-        <div class="opening-pill">🗓️ 2027年4月 開業予定！長崎市内</div>
-
-        <h1 class="hero-title">
-          <span class="accent">学生に特化した</span><br>とっておきのバーが誕生
-        </h1>
-
-        <div class="catch-wrap">
-          <div class="catch-label">🔥 目玉メニュー</div>
-          <span class="catch-time">1時間</span>
-          <span class="catch-main">1,000円〜</span>
-          <div class="catch-sub">飲み放題！！</div>
+    <!-- HERO SLIDER -->
+    <section class="hero-slider">
+      <div class="slider-track" id="sliderTrack">
+        <div class="slide slide-1">
+          <div class="slide-overlay"></div>
+          <div class="slide-content-center">
+            <div class="slide-label">2027年4月 開業予定・長崎市内</div>
+            <div class="slide-title">学生に特化した<br>とっておきのバーが誕生</div>
+          </div>
         </div>
-
-        <div class="student-badge">
-          <span>🎓</span>
-          <span>18〜23歳 学生優遇・どなたでも入店OK</span>
-          <span>🎓</span>
+        <div class="slide slide-2">
+          <div class="slide-overlay"></div>
+          <div class="slide-content-center">
+            <div class="slide-label">目玉メニュー</div>
+            <div class="slide-title">1時間<br><span class="slide-price">1,000円〜</span><br>飲み放題！！</div>
+          </div>
         </div>
-
-        <p class="hero-desc">
-          学生が主役の、明るくにぎやかなバーが<br>
-          2027年、長崎市内に誕生します。
-        </p>
-
-        <div class="hero-btns">
-          <a href="menu.html" class="btn btn-pink">料金・メニューを見る →</a>
-          <a href="recruit.html" class="btn btn-yellow">🔥 バイト募集中！</a>
+        <div class="slide slide-3">
+          <div class="slide-overlay"></div>
+          <div class="slide-content-center">
+            <div class="slide-label">18〜23歳 学生優遇・どなたでも入店OK</div>
+            <div class="slide-title">カラオケ・ダーツ・<br>Wi-Fi完備</div>
+          </div>
+        </div>
+        <div class="slide slide-4">
+          <div class="slide-overlay"></div>
+          <div class="slide-content-center">
+            <div class="slide-label">長崎初・学生特化バー</div>
+            <div class="slide-title">学生が主役の<br>お酒の場を作ります</div>
+          </div>
         </div>
       </div>
 
-      <div class="scroll-down">
-        <span>SCROLL</span>
-        <div class="scroll-arrow"></div>
+      <!-- Arrow buttons -->
+      <button class="slider-btn slider-btn-prev" id="sliderPrev" aria-label="前へ">&#8592;</button>
+      <button class="slider-btn slider-btn-next" id="sliderNext" aria-label="次へ">&#8594;</button>
+
+      <!-- Dots -->
+      <div class="slider-dots" id="sliderDots">
+        <button class="slider-dot active" data-index="0"></button>
+        <button class="slider-dot" data-index="1"></button>
+        <button class="slider-dot" data-index="2"></button>
+        <button class="slider-dot" data-index="3"></button>
+      </div>
+
+      <!-- Hero CTA overlay (bottom center) -->
+      <div class="hero-cta-bar">
+        <p class="hero-catch">学生が主役の、明るくにぎやかなバーが<br>2027年、長崎市内に誕生します。</p>
+        <div class="hero-btns">
+          <a href="menu.html" class="btn btn-pink">料金・メニューを見る</a>
+          <a href="https://www.instagram.com/under22.come_on/" target="_blank" class="btn-instagram">Instagramをフォローする</a>
+          <a href="recruit.html" class="btn btn-outline-pink">バイト募集中</a>
+        </div>
       </div>
     </section>
 
     <!-- INFO BAR -->
     <div class="info-bar">
-      <div class="info-item">📍 <strong>長崎市内</strong>（詳細は開業時公開）</div>
-      <div class="info-item">🍺 <strong>学生のためのバー</strong></div>
-      <div class="info-item">🎓 <strong>学生優遇</strong>・どなたでも入店OK</div>
-      <div class="info-item">🗓️ <strong>2027年4月</strong> 開業予定</div>
+      <div class="info-item"><strong>長崎市内</strong>（詳細は開業時公開）</div>
+      <div class="info-item"><strong>学生のためのバー</strong></div>
+      <div class="info-item"><strong>学生優遇</strong>・どなたでも入店OK</div>
+      <div class="info-item"><strong>2027年4月</strong> 開業予定</div>
     </div>
 
     <!-- FEEDBACK FORM (embedded) — 1st section -->
     <section class="feedback-section">
       <div class="feedback-inner">
         <div class="section-heading reveal">
-          <h2 class="gradient-text">💬 ご意見・ご要望</h2>
+          <h2 class="gradient-text">ご意見・ご要望</h2>
           <div class="divider"></div>
         </div>
 
         <div class="feedback-banner reveal">
-          <span class="fb-banner-emoji">💡</span>
           <div class="fb-banner-title">あなたの声がお店をつくる！</div>
           <p class="fb-banner-desc">
             良いことも悪いことも、全部聞かせてください。<br>
@@ -671,24 +689,23 @@
 
               <div class="form-group">
                 <label class="form-label" for="idx_message">メッセージ・ご意見<span class="required">*</span></label>
-                <div style="background:linear-gradient(135deg,var(--purple-soft),var(--cyan-soft));border:1px solid rgba(124,58,237,0.18);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:0.8rem;color:var(--text-secondary);line-height:1.8;">
-                  💬 <strong style="color:var(--purple);">ネガティブな意見も大歓迎！</strong>「ここが不満」「これはいらない」など本音をどうぞ。
+                <div style="background:linear-gradient(135deg,var(--purple-soft),var(--cyan-soft));border:1px solid rgba(201,168,76,0.18);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:0.8rem;color:var(--text-secondary);line-height:1.8;">
+                  <strong style="color:var(--purple);">ネガティブな意見も大歓迎！</strong>「ここが不満」「これはいらない」など本音をどうぞ。
                 </div>
                 <textarea id="idx_message" name="メッセージ" class="form-textarea" style="min-height:120px;" placeholder="良いことも悪いことも、なんでもどうぞ！批判・改善案・不満点も全部歓迎です。" maxlength="1000"></textarea>
               </div>
 
               <div id="idx_formError" style="display:none;color:var(--pink);font-size:0.84rem;margin-bottom:14px;padding:10px 14px;background:var(--pink-soft);border-radius:10px;">
-                ⚠️ メッセージを入力してください
+                メッセージを入力してください
               </div>
 
-              <button type="submit" class="submit-btn" id="idx_submitBtn">✉️ 送信する</button>
+              <button type="submit" class="submit-btn" id="idx_submitBtn">送信する</button>
             </form>
           </div>
         </div>
 
         <!-- Thank you -->
         <div id="idx_thankYou" class="thankyou-wrap fb-form-card">
-          <span class="ty-icon">🎉</span>
           <div class="ty-title">ありがとうございました！</div>
           <p class="ty-desc">いただいたご意見はお店作りに活かします。<br>2027年4月のオープンをお楽しみに！</p>
           <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
@@ -704,11 +721,11 @@
       <div class="container">
 
         <div class="price-section-catch reveal">
-          財布を気にせず、<br>思いっきり楽しもう！🥂
+          財布を気にせず、<br>思いっきり楽しもう！
         </div>
 
         <div class="section-heading reveal">
-          <h2 class="yellow-text">💰 驚きの飲み放題価格</h2>
+          <h2 class="yellow-text">驚きの飲み放題価格</h2>
           <div class="divider"></div>
           <p>学生の財布に優しい、業界最安水準を目指します</p>
         </div>
@@ -716,16 +733,16 @@
         <div class="price-cards-wrap">
           <div class="price-card featured reveal delay-1">
             <div class="featured-ribbon">おすすめ</div>
-            <div class="price-card-age">🎓 23歳以下</div>
+            <div class="price-card-age">23歳以下</div>
             <div class="price-num"><span class="price-yen">¥</span>1,000</div>
             <div class="price-per">/ 1時間　飲み放題</div>
-            <div class="price-beer-opt">🍺 ビール込みは <strong>¥1,500</strong></div>
+            <div class="price-beer-opt">ビール込みは <strong>¥1,500</strong></div>
           </div>
           <div class="price-card reveal delay-2">
             <div class="price-card-age">24歳〜</div>
             <div class="price-num"><span class="price-yen">¥</span>1,500</div>
             <div class="price-per">/ 1時間　飲み放題</div>
-            <div class="price-beer-opt">🍺 ビール込みは <strong>¥2,000</strong></div>
+            <div class="price-beer-opt">ビール込みは <strong>¥2,000</strong></div>
           </div>
         </div>
 
@@ -746,27 +763,23 @@
     <section class="features-section">
       <div class="container">
         <div class="section-heading reveal">
-          <h2 class="gradient-text">🌟 このバーの魅力</h2>
+          <h2 class="gradient-text">このバーの魅力</h2>
           <div class="divider"></div>
         </div>
         <div class="features-grid">
           <div class="feature-item reveal delay-1">
-            <span class="feature-icon">🎓</span>
             <div class="feature-title">学生特化・学生優遇</div>
             <div class="feature-desc">18〜23歳の学生が主役。学生料金・学生優遇サービスで最高の時間を。</div>
           </div>
           <div class="feature-item reveal delay-2">
-            <span class="feature-icon">💸</span>
             <div class="feature-title">圧倒的な安さ</div>
             <div class="feature-desc">1時間1,000円〜の飲み放題！学生の財布に優しい設計。</div>
           </div>
           <div class="feature-item reveal delay-3">
-            <span class="feature-icon">🎤</span>
             <div class="feature-title">カラオケ・ダーツあり</div>
             <div class="feature-desc">飲みながらカラオケ・ダーツも楽しめる！盛り上がること間違いなし。</div>
           </div>
           <div class="feature-item reveal delay-4">
-            <span class="feature-icon">📶</span>
             <div class="feature-title">Wi-Fi完備</div>
             <div class="feature-desc">高速Wi-Fi完備。SNSもゲームも思いっきり楽しめる！</div>
           </div>
@@ -778,32 +791,27 @@
     <section class="page-nav-section">
       <div class="container">
         <div class="section-heading reveal">
-          <h2>📌 もっと詳しく見る</h2>
+          <h2>もっと詳しく見る</h2>
           <div class="divider"></div>
         </div>
         <div class="page-nav-grid">
           <a href="menu.html" class="page-nav-card reveal delay-1">
-            <span class="pnc-icon">🍹</span>
             <div class="pnc-title">メニュー・料金</div>
             <div class="pnc-desc">全ドリンク・詳細料金</div>
           </a>
           <a href="facilities.html" class="page-nav-card reveal delay-2">
-            <span class="pnc-icon">🎤</span>
             <div class="pnc-title">店内設備</div>
             <div class="pnc-desc">カラオケ・ダーツ・Wi-Fi</div>
           </a>
           <a href="access.html" class="page-nav-card reveal delay-3">
-            <span class="pnc-icon">📍</span>
             <div class="pnc-title">アクセス</div>
             <div class="pnc-desc">場所・営業時間</div>
           </a>
           <a href="recruit.html" class="page-nav-card reveal delay-4">
-            <span class="pnc-icon">💼</span>
             <div class="pnc-title">バイト募集</div>
             <div class="pnc-desc">男女募集・学生優遇あり</div>
           </a>
           <a href="feedback.html" class="page-nav-card reveal delay-4">
-            <span class="pnc-icon">💬</span>
             <div class="pnc-title">ご意見・ご要望</div>
             <div class="pnc-desc">こんなお店にして！</div>
           </a>
@@ -833,16 +841,42 @@
 
   <script src="common.js"></script>
   <script>
-    // Floating particles
-    const container = document.getElementById('particles');
-    const emojis = ['🍺','🍹','🎉','⭐','🎓','🎤','💫','✨','🍸','🌟','🥂','🎊','🎯'];
-    for (let i = 0; i < 16; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      p.style.cssText = `left:${Math.random()*100}vw;font-size:${0.8+Math.random()*1.5}rem;animation-duration:${9+Math.random()*12}s;animation-delay:${Math.random()*15}s;opacity:0;`;
-      container.appendChild(p);
-    }
+    // Image Slider
+    (function() {
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.slider-dot');
+      let current = 0;
+      let prev = -1;
+      let timer = null;
+
+      function goTo(idx) {
+        if (idx === current) return;
+        slides[current].classList.remove('active');
+        slides[current].classList.add('prev');
+        dots[current].classList.remove('active');
+        setTimeout(() => { slides[prev === -1 ? current : prev < 0 ? 0 : prev].classList.remove('prev'); }, 1300);
+        prev = current;
+        current = idx;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+        clearTimeout(timer);
+        timer = setTimeout(next, 5000);
+      }
+
+      function next() { goTo((current + 1) % slides.length); }
+      function nextSlide() { goTo((current + 1) % slides.length); }
+      function prevSlide() { goTo((current - 1 + slides.length) % slides.length); }
+
+      // Init
+      slides[0].classList.add('active');
+      timer = setTimeout(next, 5000);
+
+      document.getElementById('sliderNext').addEventListener('click', nextSlide);
+      document.getElementById('sliderPrev').addEventListener('click', prevSlide);
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
+      });
+    })();
 
     // Feedback form
     const idxForm = document.getElementById('idxFeedbackForm');
@@ -853,7 +887,7 @@
       const gender = document.getElementById('idx_gender').value.trim();
       const errEl = document.getElementById('idx_formError');
       if (!age || !gender || !msg) {
-        errEl.textContent = '⚠️ 年齢・性別・メッセージは必須です';
+        errEl.textContent = '年齢・性別・メッセージは必須です';
         errEl.style.display = 'block';
         if (!age) document.getElementById('idx_age').focus();
         else if (!gender) document.getElementById('idx_gender').focus();
@@ -876,14 +910,14 @@
           launchConfetti();
           ty.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-          errEl.textContent = '⚠️ 送信に失敗しました。もう一度お試しください。';
+          errEl.textContent = '送信に失敗しました。もう一度お試しください。';
           errEl.style.display = 'block';
-          btn.disabled = false; btn.textContent = '✉️ 送信する';
+          btn.disabled = false; btn.textContent = '送信する';
         }
       }).catch(() => {
-        errEl.textContent = '⚠️ 通信エラーが発生しました。もう一度お試しください。';
+        errEl.textContent = '通信エラーが発生しました。もう一度お試しください。';
         errEl.style.display = 'block';
-        btn.disabled = false; btn.textContent = '✉️ 送信する';
+        btn.disabled = false; btn.textContent = '送信する';
       });
     });
 
@@ -892,12 +926,12 @@
       document.getElementById('idxFormWrap').style.display = 'block';
       document.getElementById('idx_thankYou').classList.remove('visible');
       document.getElementById('idx_submitBtn').disabled = false;
-      document.getElementById('idx_submitBtn').textContent = '✉️ 送信する';
+      document.getElementById('idx_submitBtn').textContent = '送信する';
     }
 
     function launchConfetti() {
       const c = document.getElementById('confettiContainer');
-      const colors = ['#e91e8c','#7c3aed','#f59e0b','#0891b2','#ea580c','#fff'];
+      const colors = ['#C9A84C','#E8C46A','#F5F0E8','#B8B0A0','#ffffff','#C9A84C'];
       for (let i = 0; i < 80; i++) {
         const p = document.createElement('div');
         p.className = 'confetti-piece';

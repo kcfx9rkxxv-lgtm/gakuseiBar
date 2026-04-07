@@ -8,7 +8,6 @@
   <style>
     /* ===== 掲示板ページ固有スタイル ===== */
 
-    /* 投稿カードのラッパー */
     .bbs-list {
       display: flex;
       flex-direction: column;
@@ -17,7 +16,6 @@
       margin: 0 auto;
     }
 
-    /* 1件の質問＋返信をまとめるカード */
     .bbs-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -32,13 +30,11 @@
       box-shadow: var(--card-shadow-hover);
     }
 
-    /* 質問部分 */
     .bbs-question {
       padding: 26px 28px 20px;
-      border-bottom: 1px dashed rgba(124,58,237,0.12);
+      border-bottom: 1px dashed rgba(201,168,76,0.15);
     }
 
-    /* 質問のヘッダー（名前・日付） */
     .bbs-question-header {
       display: flex;
       align-items: center;
@@ -47,34 +43,32 @@
       flex-wrap: wrap;
     }
 
-    /* 質問者アイコン */
     .bbs-avatar {
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--pink), var(--purple));
+      background: linear-gradient(135deg, #C9A84C, #E8C46A);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #0D0D0D;
       flex-shrink: 0;
     }
 
-    /* 質問者の名前 */
     .bbs-name {
       font-weight: 900;
       font-size: 0.95rem;
       color: var(--text);
     }
 
-    /* 投稿日 */
     .bbs-date {
       font-size: 0.78rem;
       color: var(--text-muted);
       margin-left: auto;
     }
 
-    /* 質問テキスト本文 */
     .bbs-message {
       font-size: 0.95rem;
       color: var(--text-secondary);
@@ -83,13 +77,11 @@
       word-break: break-word;
     }
 
-    /* 返信部分 */
     .bbs-reply {
       padding: 20px 28px 24px;
-      background: linear-gradient(135deg, var(--purple-soft), rgba(252,228,236,0.4));
+      background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
     }
 
-    /* 返信ヘッダー（スタッフラベル） */
     .bbs-reply-header {
       display: flex;
       align-items: center;
@@ -97,13 +89,12 @@
       margin-bottom: 12px;
     }
 
-    /* スタッフバッジ */
     .bbs-staff-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      color: white;
+      background: linear-gradient(135deg, #C9A84C, #E8C46A);
+      color: #0D0D0D;
       font-size: 0.72rem;
       font-weight: 900;
       padding: 4px 12px;
@@ -111,7 +102,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* 返信テキスト */
     .bbs-reply-text {
       font-size: 0.93rem;
       color: var(--text);
@@ -120,19 +110,17 @@
       word-break: break-word;
     }
 
-    /* 返信なし（準備中）の表示 */
     .bbs-reply-pending {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       font-size: 0.88rem;
       color: var(--text-muted);
-      background: #f3f4f6;
+      background: #1A1A1A;
       padding: 8px 18px;
       border-radius: 50px;
     }
 
-    /* ローディングスピナー */
     .bbs-loading {
       text-align: center;
       padding: 80px 20px;
@@ -153,7 +141,6 @@
       to { transform: rotate(360deg); }
     }
 
-    /* エラー表示 */
     .bbs-error {
       text-align: center;
       padding: 60px 20px;
@@ -166,24 +153,15 @@
       margin-bottom: 16px;
     }
 
-    /* 投稿ゼロ件のとき */
     .bbs-empty {
       text-align: center;
       padding: 80px 20px;
       color: var(--text-muted);
     }
 
-    .bbs-empty-icon {
-      font-size: 3.5rem;
-      display: block;
-      margin-bottom: 20px;
-      animation: float 4s ease-in-out infinite;
-    }
-
-    /* 掲示板の説明ボックス */
     .bbs-intro {
       background: linear-gradient(135deg, var(--purple-soft), var(--pink-soft));
-      border: 1.5px solid rgba(124,58,237,0.15);
+      border: 1.5px solid rgba(201,168,76,0.15);
       border-radius: 20px;
       padding: 32px 28px;
       text-align: center;
@@ -193,18 +171,11 @@
       margin-right: auto;
     }
 
-    .bbs-intro-emoji {
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 12px;
-      animation: float 4s ease-in-out infinite;
-    }
-
     .bbs-intro-title {
       font-size: clamp(1.2rem, 3vw, 1.6rem);
       font-weight: 900;
       margin-bottom: 10px;
-      background: linear-gradient(135deg, var(--purple), var(--pink));
+      background: linear-gradient(135deg, #C9A84C, #E8C46A);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -216,7 +187,6 @@
       line-height: 1.85;
     }
 
-    /* 希望出展場所タグ */
     .bbs-location {
       display: inline-flex;
       align-items: center;
@@ -230,13 +200,12 @@
       margin-top: 10px;
     }
 
-    /* 質問番号バッジ */
     .bbs-number {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      color: white;
+      background: linear-gradient(135deg, #C9A84C, #E8C46A);
+      color: #0D0D0D;
       font-size: 0.72rem;
       font-weight: 900;
       width: 26px;
@@ -245,7 +214,6 @@
       flex-shrink: 0;
     }
 
-    /* レスポンシブ対応 */
     @media (max-width: 768px) {
       .bbs-question,
       .bbs-reply {
@@ -263,7 +231,7 @@
 
   <!-- ===== ナビゲーション ===== -->
   <nav>
-    <a href="index.html" class="nav-logo"><span class="emoji">🍺</span>（名称募集中）</a>
+    <a href="index.html" class="nav-logo">（名称募集中）</a>
     <ul class="nav-links">
       <li><a href="index.html">TOP</a></li>
       <li><a href="menu.html">メニュー・料金</a></li>
@@ -278,13 +246,13 @@
 
   <!-- ===== モバイルメニュー ===== -->
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html">🏠 TOP</a>
-    <a href="menu.html">🍹 メニュー・料金</a>
-    <a href="facilities.html">🎤 店内設備</a>
-    <a href="access.html">📍 アクセス</a>
-    <a href="recruit.html">💼 バイト募集</a>
-    <a href="feedback.html">💬 ご意見・ご要望</a>
-    <a href="bbs.html" class="active">📋 掲示板</a>
+    <a href="index.html">TOP</a>
+    <a href="menu.html">メニュー・料金</a>
+    <a href="facilities.html">店内設備</a>
+    <a href="access.html">アクセス</a>
+    <a href="recruit.html">バイト募集</a>
+    <a href="feedback.html">ご意見・ご要望</a>
+    <a href="bbs.html" class="active">掲示板</a>
   </div>
 
   <main>
@@ -292,10 +260,10 @@
     <!-- ===== ページヘッダー ===== -->
     <header class="page-header">
       <div class="page-header-bg"></div>
-      <div class="page-header-orb" style="width:320px;height:320px;background:radial-gradient(circle,rgba(233,30,140,0.2),transparent);top:-80px;right:-80px;"></div>
-      <div class="page-header-orb" style="width:260px;height:260px;background:radial-gradient(circle,rgba(124,58,237,0.18),transparent);bottom:-60px;left:-50px;"></div>
+      <div class="page-header-orb" style="width:320px;height:320px;background:radial-gradient(circle,rgba(201,168,76,0.15),transparent);top:-80px;right:-80px;"></div>
+      <div class="page-header-orb" style="width:260px;height:260px;background:radial-gradient(circle,rgba(201,168,76,0.1),transparent);bottom:-60px;left:-50px;"></div>
       <div class="page-header-content">
-        <h1>📋 掲示板</h1>
+        <h1>掲示板</h1>
         <p>スタッフへの質問・お問い合わせへの回答を掲載しています</p>
       </div>
     </header>
@@ -306,7 +274,6 @@
 
         <!-- 掲示板の説明 -->
         <div class="bbs-intro reveal">
-          <span class="bbs-intro-emoji">💬</span>
           <div class="bbs-intro-title">よくある質問・Q&amp;A</div>
           <p class="bbs-intro-desc">
             皆さんからいただいた質問にスタッフが回答しています。<br>
@@ -347,21 +314,14 @@
   <script>
     /**
      * 掲示板データの取得と表示
-     * Vercel サーバーレス関数（/api/notion）を経由してNotionからデータを取得する
      */
     (async function () {
       const listEl = document.getElementById('bbsList');
       const loadingEl = document.getElementById('bbsLoading');
 
-      /**
-       * 日付を「YYYY年MM月DD日」形式にフォーマットする
-       * @param {string|null} dateStr - ISO形式の日付文字列
-       * @returns {string} フォーマット済み日付文字列
-       */
       function formatDate(dateStr) {
         if (!dateStr) return '';
         const d = new Date(dateStr);
-        // タイムゾーンのずれを補正（UTC→JST）
         const jst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
         const y = jst.getUTCFullYear();
         const m = String(jst.getUTCMonth() + 1).padStart(2, '0');
@@ -369,11 +329,6 @@
         return `${y}年${m}月${day}日`;
       }
 
-      /**
-       * XSSを防ぐためのHTML文字列エスケープ
-       * @param {string} str - エスケープ対象の文字列
-       * @returns {string} エスケープ済み文字列
-       */
       function escapeHtml(str) {
         return str
           .replace(/&/g, '&amp;')
@@ -383,34 +338,24 @@
           .replace(/'/g, '&#039;');
       }
 
-      /**
-       * 1件の投稿カードHTMLを生成する
-       * @param {Object} post - 投稿データ
-       * @param {number} index - 表示順のインデックス（番号バッジに使用）
-       * @returns {string} カードのHTML文字列
-       */
       function renderCard(post, index) {
-        // 名前が空のときは「匿名」と表示
         const name = post.name ? escapeHtml(post.name) : '匿名';
         const message = escapeHtml(post.message || '');
         const dateStr = formatDate(post.date);
 
-        // 返信がある場合とない場合で表示を切り替え
         const replyHtml = post.reply
           ? `<p class="bbs-reply-text">${escapeHtml(post.reply)}</p>`
-          : `<span class="bbs-reply-pending">⏳ 返信準備中</span>`;
+          : `<span class="bbs-reply-pending">返信準備中</span>`;
 
-        // 希望出店場所がある場合のみ表示
         const locationHtml = post.location
-          ? `<div><span class="bbs-location">📍 希望出店場所：${escapeHtml(post.location)}</span></div>`
+          ? `<div><span class="bbs-location">希望出店場所：${escapeHtml(post.location)}</span></div>`
           : '';
 
         return `
           <article class="bbs-card reveal delay-${Math.min(index % 4 + 1, 4)}">
-            <!-- 質問部分 -->
             <div class="bbs-question">
               <div class="bbs-question-header">
-                <div class="bbs-avatar">🙋</div>
+                <div class="bbs-avatar">Q</div>
                 <span class="bbs-name">${name}</span>
                 <span class="bbs-number">${index + 1}</span>
                 ${dateStr ? `<span class="bbs-date">${dateStr}</span>` : ''}
@@ -418,10 +363,9 @@
               <p class="bbs-message">${message}</p>
               ${locationHtml}
             </div>
-            <!-- 返信部分 -->
             <div class="bbs-reply">
               <div class="bbs-reply-header">
-                <span class="bbs-staff-badge">🍺 スタッフより</span>
+                <span class="bbs-staff-badge">スタッフより</span>
               </div>
               ${replyHtml}
             </div>
@@ -430,7 +374,6 @@
       }
 
       try {
-        // Vercel サーバーレス関数経由でNotionのデータを取得
         const res = await fetch('/api/notion', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -443,24 +386,19 @@
         const data = await res.json();
         const posts = data.posts || [];
 
-        // ローディング表示を消去
         loadingEl.remove();
 
         if (posts.length === 0) {
-          // 投稿が0件の場合
           listEl.innerHTML = `
             <div class="bbs-empty">
-              <span class="bbs-empty-icon">📭</span>
               <p>まだ投稿がありません。<br>最初の質問をお待ちしています！</p>
             </div>
           `;
           return;
         }
 
-        // 各投稿カードをHTMLとして挿入
         listEl.innerHTML = posts.map((post, i) => renderCard(post, i)).join('');
 
-        // スクロールアニメーションを再適用（動的に追加した要素にも適用する）
         const newRevealEls = listEl.querySelectorAll('.reveal');
         if (newRevealEls.length > 0) {
           const observer = new IntersectionObserver((entries) => {
@@ -475,12 +413,10 @@
         }
 
       } catch (err) {
-        // エラー発生時のフォールバック表示
         console.error('掲示板データの取得に失敗しました:', err);
         loadingEl.remove();
         listEl.innerHTML = `
           <div class="bbs-error">
-            <span class="bbs-error-icon">⚠️</span>
             <p>データの読み込みに失敗しました。<br>しばらく経ってから再度お試しください。</p>
           </div>
         `;
