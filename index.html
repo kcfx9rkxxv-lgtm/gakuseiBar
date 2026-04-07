@@ -48,12 +48,14 @@
     .slide-2 { background: linear-gradient(160deg, #0D0D0D 0%, #1C1500 50%, #0D0D0D 100%); }
     .slide-3 { background: linear-gradient(120deg, #0A0A0A 0%, #1A1A10 50%, #0D0D0D 100%); }
     .slide-4 { background: linear-gradient(145deg, #0D0D0D 0%, #161616 50%, #1A1A1A 100%); }
+    .slide-5 { background: linear-gradient(135deg, #0D0D0D 0%, #1A1200 50%, #0D0D0D 100%); }
 
     /* Gold accent stripe on each slide */
     .slide-1::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.12) 0%, transparent 60%); }
     .slide-2::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 70% 40%, rgba(232,196,106,0.14) 0%, transparent 60%); }
     .slide-3::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.10) 0%, transparent 60%); }
     .slide-4::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 20% 30%, rgba(232,196,106,0.12) 0%, transparent 60%); }
+    .slide-5::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 60% 50%, rgba(201,168,76,0.18) 0%, transparent 60%); }
 
     .slide-overlay {
       position: absolute;
@@ -122,34 +124,6 @@
     .slider-btn-prev { left: 20px; }
     .slider-btn-next { right: 20px; }
 
-    /* Dots */
-    .slider-dots {
-      position: absolute;
-      bottom: 130px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      display: flex;
-      gap: 10px;
-    }
-
-    .slider-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 1px solid rgba(201,168,76,0.6);
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-      padding: 0;
-    }
-
-    .slider-dot.active {
-      background: #C9A84C;
-      border-color: #C9A84C;
-      transform: scale(1.3);
-    }
-
     /* CTA bar at bottom */
     .hero-cta-bar {
       position: absolute;
@@ -174,6 +148,15 @@
       gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
+    }
+
+    /* Instagram icon */
+    .ig-icon {
+      width: 18px;
+      height: 18px;
+      vertical-align: middle;
+      margin-right: 7px;
+      margin-bottom: 2px;
     }
 
     /* Instagram button */
@@ -617,26 +600,25 @@
             <div class="slide-title">学生が主役の<br>お酒の場を作ります</div>
           </div>
         </div>
+        <div class="slide slide-5">
+          <div class="slide-overlay"></div>
+          <div class="slide-content-center">
+            <div class="slide-label">イチオシ商品</div>
+            <div class="slide-title">テキーラショット<br><span class="slide-price">¥100</span></div>
+          </div>
+        </div>
       </div>
 
       <!-- Arrow buttons -->
       <button class="slider-btn slider-btn-prev" id="sliderPrev" aria-label="前へ">&#8592;</button>
       <button class="slider-btn slider-btn-next" id="sliderNext" aria-label="次へ">&#8594;</button>
 
-      <!-- Dots -->
-      <div class="slider-dots" id="sliderDots">
-        <button class="slider-dot active" data-index="0"></button>
-        <button class="slider-dot" data-index="1"></button>
-        <button class="slider-dot" data-index="2"></button>
-        <button class="slider-dot" data-index="3"></button>
-      </div>
-
       <!-- Hero CTA overlay (bottom center) -->
       <div class="hero-cta-bar">
         <p class="hero-catch">学生が主役の、明るくにぎやかなバーが<br>2027年、長崎市内に誕生します。</p>
         <div class="hero-btns">
           <a href="menu.html" class="btn btn-pink">料金・メニューを見る</a>
-          <a href="https://www.instagram.com/under22.come_on/" target="_blank" class="btn-instagram">Instagramをフォローする</a>
+          <a href="https://www.instagram.com/under22.come_on/" target="_blank" class="btn-instagram"><svg class="ig-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagramをフォローする</a>
           <a href="recruit.html" class="btn btn-outline-pink">バイト募集中</a>
         </div>
       </div>
@@ -844,38 +826,33 @@
     // Image Slider
     (function() {
       const slides = document.querySelectorAll('.slide');
-      const dots = document.querySelectorAll('.slider-dot');
       let current = 0;
-      let prev = -1;
+      let prevIdx = -1;
       let timer = null;
 
       function goTo(idx) {
         if (idx === current) return;
         slides[current].classList.remove('active');
         slides[current].classList.add('prev');
-        dots[current].classList.remove('active');
-        setTimeout(() => { slides[prev === -1 ? current : prev < 0 ? 0 : prev].classList.remove('prev'); }, 1300);
-        prev = current;
+        const oldPrev = prevIdx;
+        setTimeout(() => {
+          if (oldPrev >= 0) slides[oldPrev].classList.remove('prev');
+        }, 1300);
+        prevIdx = current;
         current = idx;
         slides[current].classList.add('active');
-        dots[current].classList.add('active');
         clearTimeout(timer);
         timer = setTimeout(next, 5000);
       }
 
       function next() { goTo((current + 1) % slides.length); }
-      function nextSlide() { goTo((current + 1) % slides.length); }
-      function prevSlide() { goTo((current - 1 + slides.length) % slides.length); }
 
       // Init
       slides[0].classList.add('active');
       timer = setTimeout(next, 5000);
 
-      document.getElementById('sliderNext').addEventListener('click', nextSlide);
-      document.getElementById('sliderPrev').addEventListener('click', prevSlide);
-      dots.forEach(dot => {
-        dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
-      });
+      document.getElementById('sliderNext').addEventListener('click', () => goTo((current + 1) % slides.length));
+      document.getElementById('sliderPrev').addEventListener('click', () => goTo((current - 1 + slides.length) % slides.length));
     })();
 
     // Feedback form
