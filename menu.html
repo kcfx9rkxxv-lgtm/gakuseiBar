@@ -3,508 +3,1053 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>メニュー・料金 |（名称募集中）</title>
+  <title>メニュー・お会計シミュレーター | Lit</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ===== SYSTEM FEES ===== */
-    .sys-grid {
+    /* ===== PLAN CARDS ===== */
+    .plan-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 18px;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
     }
+    @media (max-width: 640px) { .plan-grid { grid-template-columns: 1fr; } }
 
-    .sys-card {
-      background: #1A1A1A;
+    .plan-card {
+      background: var(--card-bg);
       border: 1.5px solid var(--card-border);
-      border-radius: 18px;
-      padding: 30px 20px;
-      text-align: center;
+      border-radius: 20px;
+      padding: 30px 26px;
+      position: relative;
+      overflow: hidden;
       box-shadow: var(--card-shadow);
-      transition: all 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .plan-card:hover { transform: translateY(-6px); box-shadow: var(--card-shadow-hover); }
+    .plan-card.premium {
+      border-color: rgba(201,168,76,0.35);
+      background: linear-gradient(135deg, var(--card-bg), rgba(201,168,76,0.04));
     }
 
-    .sys-card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--card-shadow-hover);
-    }
-
-    .sys-icon { font-size: 2.4rem; margin-bottom: 10px; display: block; }
-    .sys-label { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
-
-    .sys-price {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 900;
-      font-size: 2rem;
-      color: var(--purple);
-    }
-
-    .sys-unit { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
-
-    .sys-detail {
-      margin-top: 12px;
-      background: var(--purple-soft);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 0.78rem;
-      color: var(--purple);
-      line-height: 1.7;
-    }
-
-    /* ===== ALL-YOU-CAN-DRINK ===== */
-    .nomihodai-box {
-      background: linear-gradient(135deg, #0D0D0D, #1A1A1A);
-      border: 2px solid rgba(201,168,76,0.2);
-      border-radius: 24px;
-      padding: 50px 30px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .nomi-headline {
-      font-size: 1.1rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
-      letter-spacing: 0.06em;
-    }
-
-    .nomi-cards {
-      display: flex;
-      justify-content: center;
-      gap: 22px;
-      flex-wrap: wrap;
-      margin: 30px 0;
-    }
-
-    .nomi-card {
-      flex: 1;
-      min-width: 215px;
-      max-width: 290px;
-      background: #1A1A1A;
-      border-radius: 20px;
-      padding: 32px 22px;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s;
-      box-shadow: 0 6px 30px rgba(201,168,76,0.12);
-    }
-
-    .nomi-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      padding: 2px;
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      -webkit-mask: linear-gradient(#1A1A1A 0 0) content-box, linear-gradient(#1A1A1A 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-    }
-
-    .nomi-card:hover { transform: translateY(-8px); }
-
-    .nomi-card.star { background: linear-gradient(135deg, #1A1A1A, #1C1500); }
-
-    .star-badge {
-      position: absolute;
-      top: -1px; right: -1px;
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
+    .plan-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #C9A84C, #E8C46A);
       color: #0D0D0D;
       font-size: 0.68rem;
-      font-weight: 900;
-      padding: 5px 14px;
-      border-radius: 0 20px 0 14px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 50px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
     }
 
-    .nomi-age { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
-
-    .nomi-price-big {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 900;
-      font-size: clamp(3rem, 9vw, 4.8rem);
-      line-height: 1;
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glowYellow 2.5s ease-in-out infinite;
-    }
-
-    .nomi-per { font-size: 0.9rem; color: var(--text-secondary); margin-top: 5px; font-weight: 700; }
-
-    .nomi-beer {
-      margin-top: 14px;
-      padding: 9px 12px;
-      background: var(--yellow-soft);
-      border: 1px solid rgba(201,168,76,0.3);
-      border-radius: 10px;
-      font-size: 0.83rem;
-      color: var(--text-secondary);
-    }
-
-    .nomi-beer strong { color: #C9A84C; }
-
-    .nomi-extras {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .nomi-extra-item {
-      background: #1A1A1A;
-      border: 1px solid rgba(201,168,76,0.15);
-      border-radius: 14px;
-      padding: 16px 22px;
-      text-align: center;
-      min-width: 150px;
-      box-shadow: 0 2px 10px rgba(201,168,76,0.06);
-    }
-
-    .nomi-extra-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
-    .nomi-extra-price { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--cyan); }
-    .nomi-extra-unit { font-size: 0.75rem; color: var(--text-muted); }
-
-    .max-price-box {
-      margin-top: 22px;
-      display: inline-block;
-      background: var(--cyan-soft);
-      border: 1px solid rgba(184,176,160,0.2);
-      border-radius: 14px;
-      padding: 14px 28px;
-      font-size: 0.86rem;
-      color: var(--text-secondary);
-      line-height: 1.9;
-    }
-
-    .max-price-box strong { color: var(--cyan); }
-
-    /* ===== DRINK MENU ===== */
-    .drink-section-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.15rem;
-      font-weight: 900;
-      color: var(--purple);
+    .plan-name {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.06em;
       margin-bottom: 18px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid var(--purple-soft);
     }
 
-    .drink-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
-      gap: 12px;
-      margin-bottom: 45px;
-    }
+    .plan-prices { display: flex; flex-direction: column; gap: 9px; margin-bottom: 22px; }
 
-    .drink-item {
+    .plan-price-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #1A1A1A;
-      border: 1.5px solid var(--card-border);
+      padding: 9px 14px;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.1);
+      border-radius: 10px;
+    }
+
+    .plan-price-age { font-size: 0.83rem; color: var(--text-secondary); font-weight: 400; }
+
+    .plan-price-val {
+      font-family: var(--font-en);
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+    }
+    .plan-price-unit { font-size: 0.72rem; color: var(--text-muted); margin-left: 3px; }
+
+    .plan-includes-title {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .plan-includes-text {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+      font-weight: 400;
+    }
+
+    .plan-upgrade-note {
+      margin-top: 22px;
+      padding: 13px 16px;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.18);
       border-radius: 12px;
-      padding: 15px 18px;
-      box-shadow: 0 2px 10px rgba(201,168,76,0.04);
-      transition: all 0.25s;
-    }
-
-    .drink-item:hover {
-      background: var(--purple-soft);
-      border-color: rgba(201,168,76,0.25);
-      transform: translateX(4px);
-    }
-
-    .drink-name { font-weight: 700; font-size: 0.9rem; flex: 1; color: var(--text); }
-    .drink-name small {
-      display: block;
-      font-size: 0.73rem;
-      color: var(--text-muted);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
       font-weight: 400;
-      margin-top: 2px;
     }
 
-    .drink-price {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 900;
-      font-size: 1.15rem;
-      color: var(--pink);
-      text-align: right;
-      white-space: nowrap;
-      margin-left: 10px;
+    .plan-condition-box {
+      margin-top: 28px;
+      padding: 20px 22px;
+      background: rgba(201,168,76,0.05);
+      border: 1.5px solid rgba(201,168,76,0.18);
+      border-radius: 14px;
     }
 
-    .drink-price small {
-      display: block;
-      font-size: 0.63rem;
-      color: var(--text-muted);
-      font-weight: 400;
-      font-family: 'Noto Sans JP', sans-serif;
+    .plan-condition-title {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
     }
 
-    /* ===== SPECIAL ===== */
-    .special-card {
-      background: linear-gradient(135deg, var(--yellow-soft), rgba(201,168,76,0.08));
-      border: 2px solid rgba(201,168,76,0.3);
-      border-radius: 20px;
-      padding: 35px 28px;
-      text-align: center;
+    .plan-condition-list { list-style: none; padding: 0; margin: 0; }
+    .plan-condition-list li {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      padding: 5px 0 5px 14px;
       position: relative;
+      line-height: 1.75;
+      font-weight: 400;
+    }
+    .plan-condition-list li::before { content: '·'; position: absolute; left: 0; color: var(--gold); }
+
+    /* ===== SHOT MENU ===== */
+    .shot-group { margin-bottom: 34px; }
+
+    .shot-group-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+
+    .shot-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+      gap: 7px;
+    }
+
+    .shot-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .shot-item:hover { border-color: rgba(201,168,76,0.22); background: rgba(201,168,76,0.04); }
+
+    .shot-name { font-size: 0.86rem; color: var(--text); font-weight: 400; flex: 1; }
+    .shot-name small { display: block; font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
+
+    .shot-price {
+      font-family: var(--font-en);
+      font-size: 0.98rem;
+      font-weight: 500;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      margin-left: 12px;
+    }
+
+    /* ===== WHISKY TABLE ===== */
+    .whisky-table-wrap {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
       overflow: hidden;
+      box-shadow: var(--card-shadow);
+      overflow-x: auto;
     }
 
-    .special-label {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      color: #0D0D0D;
-      font-weight: 900;
+    .whisky-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 420px; }
+
+    .whisky-table th {
+      background: rgba(201,168,76,0.09);
+      color: var(--gold);
+      font-weight: 500;
+      padding: 12px 18px;
+      text-align: center;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid rgba(201,168,76,0.18);
+      white-space: nowrap;
+    }
+    .whisky-table th:first-child { text-align: left; }
+
+    .whisky-table td {
+      padding: 13px 18px;
+      border-bottom: 1px solid rgba(201,168,76,0.07);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+    .whisky-table td:first-child { text-align: left; font-weight: 500; color: var(--text); }
+    .whisky-table tr:last-child td { border-bottom: none; }
+    .whisky-table tr:hover td { background: rgba(201,168,76,0.04); }
+    .whisky-price { color: var(--gold); font-family: var(--font-en); font-weight: 500; }
+
+    .whisky-note {
+      margin-top: 14px;
       font-size: 0.78rem;
-      padding: 5px 18px;
-      border-radius: 50px;
-      margin-bottom: 14px;
-      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 400;
+      line-height: 1.7;
     }
 
-    .special-name { font-size: 1.5rem; font-weight: 900; color: var(--text); margin-bottom: 10px; }
+    /* ===== OTHER FEES ===== */
+    .fees-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 16px; }
 
-    .special-price {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 900;
-      font-size: 3.2rem;
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .fee-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .fee-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover); }
+
+    .fee-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .fee-price {
+      font-family: var(--font-en);
+      font-size: 1.75rem;
+      font-weight: 500;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
       line-height: 1;
     }
 
-    .special-price span { font-size: 1.2rem; vertical-align: super; }
-    .special-desc { margin-top: 12px; font-size: 0.86rem; color: var(--text-secondary); }
+    .fee-unit { font-size: 0.73rem; color: var(--text-muted); margin-top: 6px; }
+    .fee-detail { margin-top: 10px; font-size: 0.77rem; color: var(--text-secondary); line-height: 1.75; font-weight: 400; }
+
+    /* ===== SIMULATOR ===== */
+    .sim-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: var(--card-shadow);
+    }
+    @media (max-width: 600px) { .sim-card { padding: 22px 16px; } }
+
+    .sim-section-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      margin: 26px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .sim-section-title:first-child { margin-top: 0; }
+
+    .sim-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 0;
+      gap: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.035);
+    }
+    .sim-row:last-child { border-bottom: none; }
+
+    .sim-row-label { font-size: 0.86rem; color: var(--text-secondary); font-weight: 400; flex: 1; line-height: 1.5; }
+    .sim-row-label .price-hint { font-size: 0.73rem; color: var(--text-muted); display: block; }
+
+    .stepper { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    .stepper-btn {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, color 0.18s;
+      flex-shrink: 0;
+      line-height: 1;
+      user-select: none;
+    }
+    .stepper-btn:hover { background: var(--gold); color: #0D0D0D; }
+
+    .stepper-val {
+      width: 38px;
+      text-align: center;
+      font-family: var(--font-en);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sim-select {
+      background: #141222;
+      border: 1.5px solid rgba(201,168,76,0.22);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.84rem;
+      padding: 8px 12px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .sim-select:focus { border-color: var(--gold); }
+    .sim-select option { background: #141222; }
+
+    .sim-note { font-size: 0.73rem; color: var(--text-muted); margin-top: 7px; line-height: 1.75; font-weight: 400; }
+
+    /* Simulator result */
+    .sim-result {
+      margin-top: 30px;
+      padding: 26px 22px;
+      background: rgba(201,168,76,0.06);
+      border: 1.5px solid rgba(201,168,76,0.25);
+      border-radius: 16px;
+    }
+
+    .sim-total-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .sim-total-amount {
+      font-family: var(--font-en);
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .sim-breakdown { display: flex; flex-direction: column; gap: 5px; }
+
+    .sim-breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.84rem;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .sim-breakdown-item:last-child { border-bottom: none; }
+
+    .sim-breakdown-name { color: var(--text-secondary); font-weight: 400; }
+    .sim-breakdown-name small { display: block; font-size: 0.7rem; color: var(--text-muted); }
+    .sim-breakdown-val { font-family: var(--font-en); font-weight: 500; color: var(--text); font-variant-numeric: tabular-nums; }
+
+    .sim-footer-note { margin-top: 14px; font-size: 0.73rem; color: var(--text-muted); font-weight: 400; line-height: 1.75; }
+
+    .sim-input {
+      width: 70px;
+      text-align: center;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--gold);
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 1rem;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--font-en);
+      outline: none;
+      transition: border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .sim-input:focus { border-color: var(--gold); }
+    .sim-input::-webkit-inner-spin-button,
+    .sim-input::-webkit-outer-spin-button { opacity: 0.4; }
+
+    .sim-warning {
+      display: none;
+      color: #FF4444;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      padding: 10px;
+      border: 1px solid #FF4444;
+      border-radius: 8px;
+      line-height: 1.7;
+    }
+
+    .sim-per-person {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      font-weight: 400;
+    }
   </style>
 </head>
 <body>
 
-  <nav>
-    <a href="index.html" class="nav-logo">（名称募集中）</a>
+  <nav id="mainNav">
+    <a href="index.html" class="nav-logo"><img src="lit-logo.png" alt="Lit" class="nav-logo-img" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none">Lit</span></a>
     <ul class="nav-links">
       <li><a href="index.html">TOP</a></li>
-      <li><a href="menu.html" class="active">メニュー・料金</a></li>
-      <li><a href="facilities.html">店内設備</a></li>
-      <li><a href="access.html">アクセス</a></li>
-      <li><a href="recruit.html">バイト募集</a></li>
-      <li><a href="feedback.html">ご意見</a></li>
+      <li class="nav-item-dropdown">
+        <button class="nav-trigger" type="button">バーについて<svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="mega-menu">
+          <div class="mega-menu-inner">
+            <a href="facilities.html" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <div><div class="mega-item-title">店内設備</div><div class="mega-item-desc">カウンター・ゲーム・設備一覧</div></div>
+            </a>
+            <div class="mega-divider"></div>
+            <a href="access.html" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <div><div class="mega-item-title">アクセス</div><div class="mega-item-desc">長崎市内・営業時間</div></div>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item-dropdown">
+        <button class="nav-trigger" type="button">メニュー・料金<svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="mega-menu">
+          <div class="mega-menu-inner">
+            <a href="menu.html#menu-section" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>
+              <div><div class="mega-item-title">メニュー</div><div class="mega-item-desc">ドリンク・料金を確認する</div></div>
+            </a>
+            <div class="mega-divider"></div>
+            <a href="menu.html#simulator-section" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+              <div><div class="mega-item-title">シミュレーター</div><div class="mega-item-desc">お会計を事前に計算</div></div>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item-dropdown">
+        <button class="nav-trigger" type="button">参加する<svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="mega-menu">
+          <div class="mega-menu-inner">
+            <a href="recruit.html" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div><div class="mega-item-title">バイト募集</div><div class="mega-item-desc">学生スタッフ募集中</div></div>
+            </a>
+            <div class="mega-divider"></div>
+            <a href="feedback.html" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <div><div class="mega-item-title">ご意見・ご要望</div><div class="mega-item-desc">質問・提案はこちらから</div></div>
+            </a>
+          </div>
+        </div>
+      </li>
       <li><a href="bbs.html">掲示板</a></li>
     </ul>
     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
   </nav>
+  <div class="mega-backdrop" id="megaBackdrop"></div>
 
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html">TOP</a>
-    <a href="menu.html" class="active">メニュー・料金</a>
-    <a href="facilities.html">店内設備</a>
-    <a href="access.html">アクセス</a>
-    <a href="recruit.html">バイト募集</a>
-    <a href="feedback.html">ご意見・ご要望</a>
+    <div class="mobile-menu-section">バーについて</div>
+    <a href="facilities.html" class="mobile-menu-sub">店内設備</a>
+    <a href="access.html" class="mobile-menu-sub">アクセス</a>
+    <div class="mobile-menu-section">メニュー・料金</div>
+    <a href="menu.html#menu-section" class="mobile-menu-sub">メニュー</a>
+    <a href="menu.html#simulator-section" class="mobile-menu-sub">シミュレーター</a>
+    <div class="mobile-menu-section">参加する</div>
+    <a href="recruit.html" class="mobile-menu-sub">バイト募集</a>
+    <a href="feedback.html" class="mobile-menu-sub">ご意見・ご要望</a>
     <a href="bbs.html">掲示板</a>
   </div>
 
   <header class="page-header">
     <div class="page-header-bg"></div>
-    <div class="page-header-orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(201,168,76,0.2),transparent);top:-80px;left:-60px;"></div>
-    <div class="page-header-orb" style="width:250px;height:250px;background:radial-gradient(circle,rgba(201,168,76,0.18),transparent);bottom:-60px;right:-40px;"></div>
+    <div class="page-header-orb" style="width:320px;height:320px;background:radial-gradient(circle,rgba(201,168,76,0.18),transparent);top:-90px;left:-70px;"></div>
+    <div class="page-header-orb" style="width:260px;height:260px;background:radial-gradient(circle,rgba(201,168,76,0.14),transparent);bottom:-60px;right:-40px;"></div>
     <div class="page-header-content">
-      <h1 class="gradient-text">メニュー・料金</h1>
-      <p>すべてのドリンクと料金プランをチェック！</p>
+      <h1 class="gradient-text">メニュー・お会計シミュレーター</h1>
+      <p>プランを確認して、来店前にお会計を試算してみてください</p>
     </div>
   </header>
 
   <main>
 
-    <!-- SYSTEM FEES -->
+    <!-- ① 飲み放題プラン -->
+    <section class="section section-alt" id="menu-section">
+      <div class="container">
+        <div class="section-heading reveal">
+          <h2 class="gradient-text">飲み放題プラン</h2>
+          <div class="divider"></div>
+          <p>ご来店のすべてのお客様に飲み放題プランへのご加入をお願いしています</p>
+        </div>
+
+        <div class="plan-grid reveal">
+          <!-- Standard -->
+          <div class="plan-card">
+            <div class="plan-badge">Standard</div>
+            <div class="plan-name">スタンダード</div>
+            <div class="plan-prices">
+              <div class="plan-price-row">
+                <span class="plan-price-age">23歳以下</span>
+                <span><span class="plan-price-val">¥1,000</span><span class="plan-price-unit">/ h</span></span>
+              </div>
+              <div class="plan-price-row">
+                <span class="plan-price-age">24歳以上</span>
+                <span><span class="plan-price-val">¥1,500</span><span class="plan-price-unit">/ h</span></span>
+              </div>
+            </div>
+            <div class="plan-includes-title">含まれるドリンク</div>
+            <div class="plan-includes-text">
+              ウォッカ・ジン・ラム・焼酎各種（麦・米・芋・茉莉花）・角・コアントロー・マリブ・ミスティア・カルア・ルジェカシス・ルジェピーチ・ボルスバナナ・梅酒・赤ワイン・白ワイン・日本酒・ソフトドリンク・シロップ各種（青リンゴ・桃・巨峰・レモン・ライム・ライチ・パイナップル・カルピス）
+            </div>
+          </div>
+
+          <!-- Premium -->
+          <div class="plan-card premium">
+            <div class="plan-badge">Premium</div>
+            <div class="plan-name">プレミアム</div>
+            <div class="plan-prices">
+              <div class="plan-price-row">
+                <span class="plan-price-age">23歳以下</span>
+                <span><span class="plan-price-val">¥2,000</span><span class="plan-price-unit">/ h</span></span>
+              </div>
+              <div class="plan-price-row">
+                <span class="plan-price-age">24歳以上</span>
+                <span><span class="plan-price-val">¥2,500</span><span class="plan-price-unit">/ h</span></span>
+              </div>
+            </div>
+            <div class="plan-includes-title">スタンダード全部 ＋</div>
+            <div class="plan-includes-text">
+              缶ビール・スミノフアイス・ジーマ・メーカーズマーク・クラウンロイヤル・ジャックダニエル・レッドブル系
+            </div>
+          </div>
+        </div>
+
+        <!-- Upgrade note -->
+        <div class="plan-upgrade-note reveal">
+          <strong style="color:var(--gold);">途中アップグレード（全員一斉）</strong>：差額 ¥1,000 × 人数<br>
+          ※同卓のお客様は同一プランでご利用ください
+        </div>
+
+        <!-- 23歳以下条件 -->
+        <div class="plan-condition-box reveal">
+          <div class="plan-condition-title">23歳以下料金の適用条件</div>
+          <ul class="plan-condition-list">
+            <li>身分証明書の提示が必要です</li>
+            <li>Instagram交換 ＋ ストーリー投稿（本人または店舗側）が条件となります</li>
+            <li>Instagramアカウントがない場合は、公式LINE交換または Google での口コミ評価をお願いします</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ② ショット・単品メニュー -->
     <section class="section">
       <div class="container">
         <div class="section-heading reveal">
-          <h2>システム料金</h2>
+          <h2 class="gradient-text">ショット・単品メニュー</h2>
           <div class="divider"></div>
-          <p>入店時にかかる基本料金です</p>
+          <p>飲み放題プランに加えて単品でオーダーできます</p>
         </div>
-        <div class="sys-grid">
-          <div class="sys-card reveal delay-1">
-            <div class="sys-label">チャージ料金</div>
-            <div class="sys-price">¥300</div>
-            <div class="sys-unit">お一人あたり</div>
-            <div class="sys-detail">全員一律300円<br>（どなたでも同額）</div>
+
+        <!-- テキーラ -->
+        <div class="shot-group reveal">
+          <div class="shot-group-title">テキーラ</div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Sauza（サウザ）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">ゴールド</span>
+                <span class="brand-item-type">ゴールド</span>
+                <span class="brand-item-price">¥100</span>
+              </div>
+              <div class="brand-item">
+                <span class="brand-item-name">シルバー</span>
+                <span class="brand-item-type">ブランコ</span>
+                <span class="brand-item-price">¥100</span>
+              </div>
+            </div>
           </div>
-          <div class="sys-card reveal delay-2">
-            <div class="sys-label">カラオケ（1〜2名）</div>
-            <div class="sys-price">¥200</div>
-            <div class="sys-unit">お一人あたり</div>
-            <div class="sys-detail">2名 → 400円</div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Cuervo Especial（クエルボ エスペシャル）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">ゴールド</span>
+                <span class="brand-item-type">レポサド</span>
+                <span class="brand-item-price">¥200</span>
+              </div>
+              <div class="brand-item">
+                <span class="brand-item-name">シルバー</span>
+                <span class="brand-item-type">ブランコ</span>
+                <span class="brand-item-price">¥200</span>
+              </div>
+            </div>
           </div>
-          <div class="sys-card reveal delay-3">
-            <div class="sys-label">カラオケ（3名以上）</div>
-            <div class="sys-price">¥500</div>
-            <div class="sys-unit">1グループ固定</div>
-            <div class="sys-detail">何名でも500円！<br>グループほどお得</div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Olmeca（オルメカ）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">シルバー</span>
+                <span class="brand-item-type">ブランコ</span>
+                <span class="brand-item-price">¥300</span>
+              </div>
+            </div>
           </div>
-          <div class="sys-card reveal delay-4" style="border-color:rgba(16,185,129,0.35);background:linear-gradient(135deg,rgba(5,150,105,0.15),#1A1A1A);">
-            <div class="sys-label" style="color:#059669;">ダーツ</div>
-            <div class="sys-price" style="color:#10b981;">¥0</div>
-            <div class="sys-unit">完全無料！</div>
-            <div class="sys-detail" style="background:rgba(5,150,105,0.15);color:#059669;">飲み放題料金に含まれています<br>何回でも自由に楽しめる</div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Altos（アルトス）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">Plata</span>
+                <span class="brand-item-type">ブランコ</span>
+                <span class="brand-item-price">¥300</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Cuervo 1800（クエルボ 1800）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">エクストラアネホ</span>
+                <span class="brand-item-type">Extra Añejo</span>
+                <span class="brand-item-price">¥2,000</span>
+              </div>
+              <div class="brand-item">
+                <span class="brand-item-name">アネホ</span>
+                <span class="brand-item-type">Añejo</span>
+                <span class="brand-item-price">¥1,000</span>
+              </div>
+              <div class="brand-item">
+                <span class="brand-item-name">レポサド</span>
+                <span class="brand-item-type">Reposado</span>
+                <span class="brand-item-price">¥500</span>
+              </div>
+              <div class="brand-item">
+                <span class="brand-item-name">シルバー</span>
+                <span class="brand-item-type">Blanco</span>
+                <span class="brand-item-price">¥500</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Don Julio（ドンフリオ）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">1942</span>
+                <span class="brand-item-type">Añejo</span>
+                <span class="brand-item-price">¥2,000</span>
+              </div>
+              <div class="brand-item">
+                <span class="brand-item-name">ブランコ</span>
+                <span class="brand-item-type">Blanco</span>
+                <span class="brand-item-price">¥800</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Patrón（パトロン）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">アネホ</span>
+                <span class="brand-item-type">Añejo</span>
+                <span class="brand-item-price">¥1,000</span>
+              </div>
+              <div class="brand-item">
+                <span class="brand-item-name">シルバー</span>
+                <span class="brand-item-type">Blanco</span>
+                <span class="brand-item-price">¥800</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Casamigos（カサミゴス）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">ブランコ</span>
+                <span class="brand-item-type">Blanco</span>
+                <span class="brand-item-price">¥800</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-card">
+            <div class="brand-card-header">
+              <div class="brand-name">Clase Azul（クラセアスール）</div>
+              <div class="brand-origin">Mexico / Tequila</div>
+            </div>
+            <div class="brand-card-items">
+              <div class="brand-item">
+                <span class="brand-item-name">レポサド</span>
+                <span class="brand-item-type">Reposado</span>
+                <span class="brand-item-price">¥2,000</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 甘い系 -->
+        <div class="shot-group reveal">
+          <div class="shot-group-title">甘い系・パーティーショット</div>
+          <div class="shot-list">
+            <div class="shot-item"><span class="shot-name">チャミスル <small>40ml</small></span><span class="shot-price">¥100</span></div>
+            <div class="shot-item"><span class="shot-name">テキーラローズ</span><span class="shot-price">¥300</span></div>
+            <div class="shot-item"><span class="shot-name">クライナーファイグリング</span><span class="shot-price">¥500</span></div>
+            <div class="shot-item"><span class="shot-name">スラット</span><span class="shot-price">¥500</span></div>
+            <div class="shot-item"><span class="shot-name">コカボム（コカレロ ＋ レッドブル）</span><span class="shot-price">¥1,000</span></div>
+          </div>
+        </div>
+
+        <!-- ジェリーショット -->
+        <div class="shot-group reveal">
+          <div class="shot-group-title">ジェリーショット（手作り）</div>
+          <div class="shot-list">
+            <div class="shot-item"><span class="shot-name">1個</span><span class="shot-price">¥300</span></div>
+            <div class="shot-item"><span class="shot-name">3個セット</span><span class="shot-price">¥800</span></div>
+            <div class="shot-item"><span class="shot-name">5個セット</span><span class="shot-price">¥1,200</span></div>
+          </div>
+        </div>
+
+        <!-- その他単品 -->
+        <div class="shot-group reveal">
+          <div class="shot-group-title">その他単品ショット</div>
+          <div class="shot-list">
+            <div class="shot-item"><span class="shot-name">ウォッカ / ジンショット（1種）</span><span class="shot-price">¥300</span></div>
+            <div class="shot-item"><span class="shot-name">創作ショット <small>2種以上MIX・高級銘柄除く</small></span><span class="shot-price">¥500</span></div>
+            <div class="shot-item"><span class="shot-name">ヘネシー</span><span class="shot-price">¥500</span></div>
+            <div class="shot-item"><span class="shot-name">イエガーマイスター</span><span class="shot-price">¥500</span></div>
+            <div class="shot-item"><span class="shot-name">イエガーボム（レッドブル）</span><span class="shot-price">¥1,000</span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ALL-YOU-CAN-DRINK -->
+    <!-- ③ ウイスキー単品 -->
     <section class="section section-alt">
       <div class="container">
         <div class="section-heading reveal">
-          <h2 class="yellow-text">飲み放題プラン</h2>
+          <h2 class="gradient-text">ウイスキー単品</h2>
           <div class="divider"></div>
-          <p>これが目玉メニュー！学生に優しい価格設定</p>
+          <p>飲み方別に価格が異なります</p>
         </div>
 
-        <!-- MANDATORY NOTICE -->
-        <div class="reveal" style="margin-bottom:32px;">
-          <div style="background:linear-gradient(135deg,#1A1A1A,#0D0D0D);border:2.5px solid rgba(201,168,76,0.35);border-radius:18px;padding:26px 28px;position:relative;overflow:hidden;">
-            <div style="position:absolute;top:0;left:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--pink),var(--purple));border-radius:18px 0 0 18px;"></div>
-            <div style="padding-left:8px;">
-              <div style="font-weight:900;font-size:1.05rem;color:var(--pink);margin-bottom:10px;display:flex;align-items:center;gap:8px;">
-                当店のシステムについて（重要）
-              </div>
-              <div style="font-size:0.9rem;color:var(--text-secondary);line-height:1.9;">
-                <p style="margin:0 0 8px;"><strong style="color:var(--text);">飲み放題プランは全員必須</strong>です。単品ドリンクのみのご注文はできません。</p>
-                <p style="margin:0;">飲み放題プランにご加入いただいた上で、追加でショットやボトルなどの<strong style="color:var(--text);">単品メニューをプラスする</strong>スタイルです。</p>
-              </div>
-              <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
-                <span style="background:rgba(201,168,76,0.1);color:var(--pink);font-size:0.78rem;font-weight:900;padding:4px 12px;border-radius:50px;">✅ 飲み放題 ＋ 単品追加　→ OK</span>
-                <span style="background:rgba(100,100,100,0.08);color:var(--text-muted);font-size:0.78rem;font-weight:900;padding:4px 12px;border-radius:50px;">❌ 単品のみ　→ NG</span>
-              </div>
-            </div>
-          </div>
+        <div class="whisky-table-wrap reveal">
+          <table class="whisky-table">
+            <thead>
+              <tr>
+                <th>銘柄</th>
+                <th>ロック</th>
+                <th>ストレート</th>
+                <th>ハイボール</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ラフロイグ</td>
+                <td><span class="whisky-price">¥1,000</span></td>
+                <td><span class="whisky-price">¥800</span></td>
+                <td><span class="whisky-price">¥800</span></td>
+              </tr>
+              <tr>
+                <td>マッカラン</td>
+                <td><span class="whisky-price">¥1,200</span></td>
+                <td><span class="whisky-price">¥1,000</span></td>
+                <td><span class="whisky-price">¥1,000</span></td>
+              </tr>
+              <tr>
+                <td>響</td>
+                <td><span class="whisky-price">¥1,400</span></td>
+                <td><span class="whisky-price">¥1,200</span></td>
+                <td><span class="whisky-price">¥1,200</span></td>
+              </tr>
+              <tr>
+                <td>山崎</td>
+                <td><span class="whisky-price">¥1,600</span></td>
+                <td><span class="whisky-price">¥1,400</span></td>
+                <td><span class="whisky-price">¥1,400</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="nomihodai-box reveal">
-          <div class="nomi-headline">ALL YOU CAN DRINK</div>
-
-          <div class="nomi-cards">
-            <div class="nomi-card star">
-              <div class="star-badge">おすすめ</div>
-              <div class="nomi-age">23歳以下</div>
-              <div class="nomi-price-big">1,000</div>
-              <div class="nomi-per">円 / 1時間</div>
-              <div class="nomi-beer">ビール込み <strong>¥1,500</strong></div>
-            </div>
-            <div class="nomi-card">
-              <div class="nomi-age">24歳〜</div>
-              <div class="nomi-price-big">1,500</div>
-              <div class="nomi-per">円 / 1時間</div>
-              <div class="nomi-beer">ビール込み <strong>¥2,000</strong></div>
-            </div>
-          </div>
-
-          <div class="nomi-extras">
-            <div class="nomi-extra-item">
-              <div class="nomi-extra-label">延長</div>
-              <div class="nomi-extra-price">¥1,000</div>
-              <div class="nomi-extra-unit">/ 自動延長</div>
-            </div>
-          </div>
-
-          <div class="max-price-box">
-            最大料金（以降無制限）<br>
-            <strong>日〜木</strong>：¥4,000〜 ／ <strong>金・土・祝前日</strong>：¥5,000〜
-          </div>
-        </div>
+        <p class="whisky-note reveal">
+          ※ 角・メーカーズマーク・クラウンロイヤル・ジャックダニエルはプレミアムプランに含まれるため単品注文はできません
+        </p>
       </div>
     </section>
 
-    <!-- SINGLE DRINKS -->
+    <!-- ④ その他料金 -->
     <section class="section">
       <div class="container">
         <div class="section-heading reveal">
-          <h2 class="gradient-text">ドリンク単品メニュー</h2>
-          <div class="divider"></div>
-          <p>飲み放題プランに加えて、単品でプラスできます</p>
-        </div>
-
-        <div class="drink-section-title reveal">
-          <span>ショット</span>
-        </div>
-        <div class="drink-grid reveal">
-          <div class="drink-item">
-            <div class="drink-name">スタンダードショット<small>チャミスル・テキーラなど</small></div>
-            <div class="drink-price">¥100<small>/ 20ml</small></div>
-          </div>
-          <div class="drink-item">
-            <div class="drink-name">プレミアムショット<small>パトロン・ドン・フリオなど</small></div>
-            <div class="drink-price">¥500<small>/ 20ml</small></div>
-          </div>
-          <div class="drink-item">
-            <div class="drink-name">スピリタス<small>アルコール96%</small></div>
-            <div class="drink-price">¥300<small>/ 20ml</small></div>
-          </div>
-        </div>
-
-        <div class="drink-section-title reveal">
-          <span>ボトル・カクテル</span>
-        </div>
-        <div class="drink-grid reveal">
-          <div class="drink-item">
-            <div class="drink-name">クライナー</div>
-            <div class="drink-price">¥400<small>/ 1本</small></div>
-          </div>
-          <div class="drink-item">
-            <div class="drink-name">コカボム</div>
-            <div class="drink-price">¥700<small>/ 1杯</small></div>
-          </div>
-          <div class="drink-item">
-            <div class="drink-name">スミノフ・ジーマ<small>ボトル</small></div>
-            <div class="drink-price">¥500<small>/ 1本</small></div>
-          </div>
-          <div class="drink-item">
-            <div class="drink-name">カクテル・ロック等<small>種類により変動</small></div>
-            <div class="drink-price" style="color:var(--cyan);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;font-weight:900;">価格<br>応相談</div>
-          </div>
-        </div>
-
-        <!-- SPECIAL -->
-        <div class="section-heading reveal" style="margin-top:10px;">
-          <h2 class="yellow-text">スペシャルメニュー</h2>
+          <h2 class="gradient-text">その他料金</h2>
           <div class="divider"></div>
         </div>
 
-        <div class="special-card reveal">
-          <div class="special-label">SPECIAL</div>
-          <div class="special-name">学生シャンパン</div>
-          <div class="special-price"><span>¥</span>5,000</div>
-          <div class="special-desc">特別な日のお祝いに！みんなで乾杯しよう。</div>
+        <div class="fees-grid">
+          <div class="fee-card reveal delay-1">
+            <div class="fee-label">チャージ</div>
+            <div class="fee-price">¥300</div>
+            <div class="fee-unit">全員一律</div>
+            <div class="fee-detail">ご来店のすべてのお客様に一律でかかります</div>
+          </div>
+          <div class="fee-card reveal delay-2">
+            <div class="fee-label">カラオケ</div>
+            <div class="fee-price">¥0〜</div>
+            <div class="fee-unit">グループ / 回</div>
+            <div class="fee-detail">なし ¥0 / 1名 ¥200 / 2名 ¥400<br>3名以上 ¥600固定</div>
+          </div>
+          <div class="fee-card reveal delay-3">
+            <div class="fee-label">延長</div>
+            <div class="fee-price">¥1,000</div>
+            <div class="fee-unit">/ 回（自動）</div>
+            <div class="fee-detail">1分超過でも自動的に1回分（¥1,000/人）発生します</div>
+          </div>
+          <div class="fee-card reveal delay-4">
+            <div class="fee-label">スタッフドリンク</div>
+            <div class="fee-price">¥500〜</div>
+            <div class="fee-unit">/ 杯</div>
+            <div class="fee-detail">23歳以下同卓あり ¥500<br>全員24歳以上 ¥800</div>
+          </div>
         </div>
-
       </div>
     </section>
 
-    <section class="section" style="text-align:center;padding-top:20px;padding-bottom:80px;">
-      <div class="reveal">
-        <p style="color:var(--text-muted);margin-bottom:24px;">「このドリンクを置いてほしい！」というご意見もお待ちしています</p>
-        <a href="feedback.html" class="btn btn-pink" style="margin-right:14px;">ご意見・ご要望 →</a>
-        <a href="facilities.html" class="btn btn-outline-purple">店内設備を見る</a>
+    <!-- ⑤ シミュレーター -->
+    <section class="section section-alt" id="simulator-section">
+      <div class="container container-sm">
+        <div class="section-heading reveal">
+          <h2 class="gradient-text">お会計シミュレーター</h2>
+          <div class="divider"></div>
+          <p>来店前の参考にどうぞ。他店と比べてみてください。</p>
+        </div>
+
+        <div class="sim-card reveal">
+
+          <!-- 【1】プランと人数 -->
+          <div class="sim-section-title">① プランと人数</div>
+
+          <div class="sim-row">
+            <div class="sim-row-label">
+              スタンダード・23歳以下
+              <span class="price-hint">¥1,000 / h</span>
+            </div>
+            <input class="sim-input" type="number" id="in-s23" min="0" max="50" value="0">
+          </div>
+
+          <div class="sim-row">
+            <div class="sim-row-label">
+              スタンダード・24歳以上
+              <span class="price-hint">¥1,500 / h</span>
+            </div>
+            <input class="sim-input" type="number" id="in-s24" min="0" max="50" value="0">
+          </div>
+
+          <div class="sim-row">
+            <div class="sim-row-label">
+              プレミアム・23歳以下
+              <span class="price-hint">¥2,000 / h</span>
+            </div>
+            <input class="sim-input" type="number" id="in-p23" min="0" max="50" value="0">
+          </div>
+
+          <div class="sim-row">
+            <div class="sim-row-label">
+              プレミアム・24歳以上
+              <span class="price-hint">¥2,500 / h</span>
+            </div>
+            <input class="sim-input" type="number" id="in-p24" min="0" max="50" value="0">
+          </div>
+
+          <!-- 【2】延長 -->
+          <div class="sim-section-title">② 延長回数</div>
+
+          <div class="sim-row">
+            <div class="sim-row-label">滞在時間</div>
+            <select class="sim-select" id="sim-ext">
+              <option value="0">0回（1時間）</option>
+              <option value="1">1回（2時間）</option>
+              <option value="2">2回（3時間）</option>
+              <option value="3">3回（4時間）</option>
+              <option value="4">4回（5時間）</option>
+              <option value="5">5回（6時間）</option>
+            </select>
+          </div>
+          <p class="sim-note">※ 延長は最大5回（6時間）まで。1分超過で自動的に1回（¥1,000 / 人）発生します</p>
+
+          <!-- 【3】カラオケ -->
+          <div class="sim-section-title">③ カラオケ</div>
+
+          <div class="sim-row">
+            <div class="sim-row-label">人数</div>
+            <select class="sim-select" id="sim-karaoke">
+              <option value="0">なし（¥0）</option>
+              <option value="200">1人（¥200）</option>
+              <option value="400">2人（¥400）</option>
+              <option value="600">3人（¥600）</option>
+              <option value="800">4人（¥800）</option>
+              <option value="1000">5人（¥1,000）</option>
+            </select>
+          </div>
+
+          <!-- 【4】ショット -->
+          <div class="sim-section-title">④ ショット追加</div>
+
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥100 / 杯</span></div>
+            <input class="sim-input" type="number" id="in-sh100" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥200 / 杯</span></div>
+            <input class="sim-input" type="number" id="in-sh200" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥300 / 杯</span></div>
+            <input class="sim-input" type="number" id="in-sh300" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥500 / 杯</span></div>
+            <input class="sim-input" type="number" id="in-sh500" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥800 / 杯</span></div>
+            <input class="sim-input" type="number" id="in-sh800" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥1,000 / 杯</span></div>
+            <input class="sim-input" type="number" id="in-sh1000" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥2,000 / 杯</span></div>
+            <input class="sim-input" type="number" id="in-sh2000" min="0" max="99" value="0">
+          </div>
+
+          <!-- 【5】ウイスキー -->
+          <div class="sim-section-title">⑤ ウイスキー単品</div>
+
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥800 / 杯（ラフロイグ ストレート・ハイボール）</span></div>
+            <input class="sim-input" type="number" id="in-w800" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥1,000 / 杯（ラフロイグ ロック・マッカラン ST/HB）</span></div>
+            <input class="sim-input" type="number" id="in-w1000" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥1,200 / 杯（マッカラン ロック・響 ST/HB）</span></div>
+            <input class="sim-input" type="number" id="in-w1200" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥1,400 / 杯（響 ロック・山崎 ST/HB）</span></div>
+            <input class="sim-input" type="number" id="in-w1400" min="0" max="99" value="0">
+          </div>
+          <div class="sim-row">
+            <div class="sim-row-label"><span class="price-hint">¥1,600 / 杯（山崎 ロック）</span></div>
+            <input class="sim-input" type="number" id="in-w1600" min="0" max="99" value="0">
+          </div>
+
+          <!-- 【6】スタッフドリンク -->
+          <div class="sim-section-title">⑥ スタッフドリンク</div>
+
+          <div class="sim-row">
+            <div class="sim-row-label">
+              杯数
+              <span class="price-hint" id="staff-price-hint">単価は人数確定後に自動設定されます</span>
+            </div>
+            <input class="sim-input" type="number" id="in-staff" min="0" max="100" value="0">
+          </div>
+          <p class="sim-note">※ スタッフドリンクの売上はスタッフに還元されます</p>
+
+          <!-- 結果 -->
+          <div class="sim-result" id="sim-result">
+            <div id="sim-warning" class="sim-warning">⚠️ スタンダードとプレミアムの混在が検出されました。同卓は同一プランでのご利用をお願いしております。プレミアム料金で計算しています。</div>
+            <div class="sim-total-label">合計（税込）</div>
+            <div class="sim-total-amount" id="sim-total">¥0</div>
+            <div class="sim-per-person" id="sim-per-person"></div>
+            <div class="sim-breakdown" id="sim-breakdown"></div>
+            <p class="sim-footer-note">※ スタッフドリンクの売上はスタッフに還元されます。</p>
+          </div>
+
+        </div>
       </div>
     </section>
 
   </main>
 
   <footer>
-    <span class="footer-logo">（名称募集中）</span>
+    <img src="lit-logo.png" alt="Lit" class="footer-logo-img"
+      onerror="this.style.display='none';this.nextSibling.style.display='inline'">
+    <span class="footer-logo" style="display:none">Lit</span>
     <ul class="footer-nav">
       <li><a href="index.html">TOP</a></li>
       <li><a href="menu.html">メニュー</a></li>
@@ -518,5 +1063,124 @@
   </footer>
 
   <script src="common.js"></script>
+  <script>
+    // ===== Simulator =====
+
+    function readInt(id) {
+      const v = parseInt(document.getElementById(id).value) || 0;
+      return Math.max(0, v);
+    }
+
+    function fmt(n) {
+      return '¥' + n.toLocaleString('ja-JP');
+    }
+
+    function calc() {
+      const s23 = readInt('in-s23');
+      const s24 = readInt('in-s24');
+      const p23 = readInt('in-p23');
+      const p24 = readInt('in-p24');
+      const sh100  = readInt('in-sh100');
+      const sh200  = readInt('in-sh200');
+      const sh300  = readInt('in-sh300');
+      const sh500  = readInt('in-sh500');
+      const sh800  = readInt('in-sh800');
+      const sh1000 = readInt('in-sh1000');
+      const sh2000 = readInt('in-sh2000');
+      const w800   = readInt('in-w800');
+      const w1000  = readInt('in-w1000');
+      const w1200  = readInt('in-w1200');
+      const w1400  = readInt('in-w1400');
+      const w1600  = readInt('in-w1600');
+      const staffCups = readInt('in-staff');
+
+      const ext     = parseInt(document.getElementById('sim-ext').value);
+      const karaoke = parseInt(document.getElementById('sim-karaoke').value);
+
+      const total23    = s23 + p23;
+      const totalPeople = s23 + s24 + p23 + p24;
+      const hasMixed = (s23 > 0 || s24 > 0) && (p23 > 0 || p24 > 0);
+
+      // 飲み放題（混在時は全員プレミアム換算）
+      let nomihodai;
+      if (hasMixed) {
+        nomihodai = ((s23 + p23) * 2000 + (s24 + p24) * 2500) * (1 + ext);
+      } else {
+        nomihodai = (s23 * 1000 + s24 * 1500 + p23 * 2000 + p24 * 2500) * (1 + ext);
+      }
+
+      const charge = 300 * totalPeople;
+
+      const shotCups  = sh100 + sh200 + sh300 + sh500 + sh800 + sh1000 + sh2000;
+      const shots     = sh100 * 100 + sh200 * 200 + sh300 * 300 + sh500 * 500 + sh800 * 800 + sh1000 * 1000 + sh2000 * 2000;
+
+      const whiskyCups = w800 + w1000 + w1200 + w1400 + w1600;
+      const whisky     = w800 * 800 + w1000 * 1000 + w1200 * 1200 + w1400 * 1400 + w1600 * 1600;
+
+      const staffUnit  = total23 >= 1 ? 500 : 800;
+      const staffTotal = staffUnit * staffCups;
+
+      const total = nomihodai + charge + karaoke + shots + whisky + staffTotal;
+
+      // 混在警告
+      const warning = document.getElementById('sim-warning');
+      warning.style.display = hasMixed ? 'block' : 'none';
+
+      // スタッフドリンク単価ヒント
+      if (totalPeople > 0) {
+        document.getElementById('staff-price-hint').textContent =
+          total23 >= 1 ? '23歳以下同卓あり → ¥500 / 杯' : '全員24歳以上 → ¥800 / 杯';
+      } else {
+        document.getElementById('staff-price-hint').textContent = '単価は人数確定後に自動設定されます';
+      }
+
+      // 合計
+      document.getElementById('sim-total').textContent = fmt(total);
+
+      // 一人当たり
+      const perPersonEl = document.getElementById('sim-per-person');
+      if (totalPeople > 0) {
+        perPersonEl.textContent = `おひとり様あたり ${fmt(Math.ceil(total / totalPeople))}`;
+      } else {
+        perPersonEl.textContent = '';
+      }
+
+      // 内訳
+      const items = [];
+      if (nomihodai > 0) {
+        const hours = 1 + ext;
+        const label = hasMixed
+          ? `飲み放題・プレミアム換算（${hours}時間・${totalPeople}名）`
+          : `飲み放題（${hours}時間・${totalPeople}名）`;
+        items.push({ name: label, val: nomihodai });
+      }
+      if (charge > 0)  items.push({ name: `チャージ（${totalPeople}名）`, val: charge });
+      if (karaoke > 0) items.push({ name: 'カラオケ', val: karaoke });
+      if (shots > 0)   items.push({ name: `ショット合計（計${shotCups}杯）`, val: shots });
+      if (whisky > 0)  items.push({ name: `ウイスキー合計（計${whiskyCups}杯）`, val: whisky });
+      if (staffTotal > 0) {
+        const sub = total23 >= 1 ? '23歳以下同卓あり → ¥500/杯' : '全員24歳以上 → ¥800/杯';
+        items.push({ name: `スタッフドリンク（${staffCups}杯）`, sub, val: staffTotal });
+      }
+
+      const bd = document.getElementById('sim-breakdown');
+      bd.innerHTML = items.map(it => `
+        <div class="sim-breakdown-item">
+          <span class="sim-breakdown-name">${it.name}${it.sub ? `<small>${it.sub}</small>` : ''}</span>
+          <span class="sim-breakdown-val">${fmt(it.val)}</span>
+        </div>
+      `).join('');
+    }
+
+    // number inputs
+    document.querySelectorAll('.sim-input').forEach(el => {
+      el.addEventListener('input', calc);
+      el.addEventListener('change', calc);
+    });
+
+    // selects
+    document.getElementById('sim-ext').addEventListener('change', calc);
+    document.getElementById('sim-karaoke').addEventListener('change', calc);
+  </script>
 </body>
 </html>

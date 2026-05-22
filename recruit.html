@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>バイト募集 |（名称募集中）</title>
+  <title>バイト募集 | Lit</title>
   <link rel="stylesheet" href="style.css">
   <style>
     /* ===== RECRUIT HERO ===== */
@@ -232,27 +232,76 @@
 </head>
 <body>
 
-  <nav>
-    <a href="index.html" class="nav-logo">（名称募集中）</a>
+  <nav id="mainNav">
+    <a href="index.html" class="nav-logo"><img src="lit-logo.png" alt="Lit" class="nav-logo-img" onerror="this.style.display='none';this.nextSibling.style.display='inline'"><span style="display:none">Lit</span></a>
     <ul class="nav-links">
       <li><a href="index.html">TOP</a></li>
-      <li><a href="menu.html">メニュー・料金</a></li>
-      <li><a href="facilities.html">店内設備</a></li>
-      <li><a href="access.html">アクセス</a></li>
-      <li><a href="recruit.html" class="active">バイト募集</a></li>
-      <li><a href="feedback.html">ご意見</a></li>
+      <li class="nav-item-dropdown">
+        <button class="nav-trigger" type="button">バーについて<svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="mega-menu">
+          <div class="mega-menu-inner">
+            <a href="facilities.html" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <div><div class="mega-item-title">店内設備</div><div class="mega-item-desc">カウンター・ゲーム・設備一覧</div></div>
+            </a>
+            <div class="mega-divider"></div>
+            <a href="access.html" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <div><div class="mega-item-title">アクセス</div><div class="mega-item-desc">長崎市内・営業時間</div></div>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item-dropdown">
+        <button class="nav-trigger" type="button">メニュー・料金<svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="mega-menu">
+          <div class="mega-menu-inner">
+            <a href="menu.html#menu-section" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>
+              <div><div class="mega-item-title">メニュー</div><div class="mega-item-desc">ドリンク・料金を確認する</div></div>
+            </a>
+            <div class="mega-divider"></div>
+            <a href="menu.html#simulator-section" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+              <div><div class="mega-item-title">シミュレーター</div><div class="mega-item-desc">お会計を事前に計算</div></div>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item-dropdown">
+        <button class="nav-trigger" type="button">参加する<svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="mega-menu">
+          <div class="mega-menu-inner">
+            <a href="recruit.html" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div><div class="mega-item-title">バイト募集</div><div class="mega-item-desc">学生スタッフ募集中</div></div>
+            </a>
+            <div class="mega-divider"></div>
+            <a href="feedback.html" class="mega-item">
+              <div class="mega-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <div><div class="mega-item-title">ご意見・ご要望</div><div class="mega-item-desc">質問・提案はこちらから</div></div>
+            </a>
+          </div>
+        </div>
+      </li>
       <li><a href="bbs.html">掲示板</a></li>
     </ul>
     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
   </nav>
+  <div class="mega-backdrop" id="megaBackdrop"></div>
 
+  <!-- ===== モバイルメニュー ===== -->
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html">TOP</a>
-    <a href="menu.html">メニュー・料金</a>
-    <a href="facilities.html">店内設備</a>
-    <a href="access.html">アクセス</a>
-    <a href="recruit.html" class="active">バイト募集</a>
-    <a href="feedback.html">ご意見・ご要望</a>
+    <div class="mobile-menu-section">バーについて</div>
+    <a href="facilities.html" class="mobile-menu-sub">店内設備</a>
+    <a href="access.html" class="mobile-menu-sub">アクセス</a>
+    <div class="mobile-menu-section">メニュー・料金</div>
+    <a href="menu.html#menu-section" class="mobile-menu-sub">メニュー</a>
+    <a href="menu.html#simulator-section" class="mobile-menu-sub">シミュレーター</a>
+    <div class="mobile-menu-section">参加する</div>
+    <a href="recruit.html" class="mobile-menu-sub">バイト募集</a>
+    <a href="feedback.html" class="mobile-menu-sub">ご意見・ご要望</a>
     <a href="bbs.html">掲示板</a>
   </div>
 
@@ -444,7 +493,9 @@
   </main>
 
   <footer>
-    <span class="footer-logo">（名称募集中）</span>
+    <img src="lit-logo.png" alt="Lit" class="footer-logo-img"
+      onerror="this.style.display='none';this.nextSibling.style.display='inline'">
+    <span class="footer-logo" style="display:none">Lit</span>
     <ul class="footer-nav">
       <li><a href="index.html">TOP</a></li>
       <li><a href="menu.html">メニュー</a></li>
