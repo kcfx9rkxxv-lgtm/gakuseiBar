@@ -51,6 +51,63 @@
       margin: 0 auto 26px;
     }
 
+    /* ===== RECRUIT HERO (2カラム) ===== */
+    .recruit-hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+      background: var(--bg);
+      border-radius: 24px;
+      padding: 50px 40px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: none;
+    }
+    .recruit-hero-text { text-align: left; }
+    .recruit-hero-text .recruit-headline { text-align: left; }
+    .recruit-hero-text .recruit-sub { text-align: left; margin: 0 0 26px; max-width: none; }
+    .recruit-hero-photo {
+      border-radius: 18px;
+      overflow: hidden;
+      min-height: 320px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(13,13,13,0.4));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .recruit-hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-placeholder {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 20px;
+      border: 1.5px dashed rgba(201,168,76,0.35);
+      border-radius: 14px;
+      margin: 16px;
+    }
+    .photo-placeholder .ph-icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+    .photo-placeholder p { font-size: 0.8rem; line-height: 1.7; }
+    .badge-red-bright { background: rgba(255,90,90,0.14); border: 1px solid rgba(255,90,90,0.35); color: #FF6B6B; }
+    .badge-blue-bright { background: rgba(79,168,255,0.14); border: 1px solid rgba(79,168,255,0.35); color: #4FA8FF; }
+
+    /* ===== IG CAROUSEL ===== */
+    .recruit-hero-photo { padding: 0; }
+    .ig-carousel { position: relative; width: 100%; height: 100%; min-height: 320px; }
+    .ig-carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.5s ease; }
+    .ig-slide { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ig-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(13,13,13,0.5); border: 1px solid rgba(201,168,76,0.3); color: #F5F5F5; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; }
+    .ig-nav-prev { left: 10px; }
+    .ig-nav-next { right: 10px; }
+    .ig-dots { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+    .ig-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(245,245,245,0.35); cursor: pointer; transition: all 0.2s; }
+    .ig-dot.active { background: var(--pink); width: 18px; border-radius: 4px; }
+    @media (max-width: 768px) {
+      .recruit-hero-grid { grid-template-columns: 1fr; padding: 36px 26px; }
+      .recruit-hero-text, .recruit-hero-text .recruit-headline, .recruit-hero-text .recruit-sub { text-align: center; }
+      .recruit-hero-photo { min-height: 220px; order: -1; }
+    }
+
     /* ===== POINTS ===== */
     .points-grid {
       display: grid;
@@ -320,24 +377,70 @@
     <!-- RECRUIT HERO -->
     <section class="section">
       <div class="container">
-        <div class="recruit-hero reveal">
-          <div class="recruit-headline">一緒にお店を作りませんか？</div>
-          <p class="recruit-sub">
-            2027年4月のオープンに向けて、一緒に盛り上げてくれる仲間を募集中！<br>
-            バイト未経験でも、授業が忙しくても大丈夫。<br>
-            男女ともに歓迎・学生優遇あり。
-          </p>
-          <div>
-            <span class="badge badge-pink" style="margin:4px;">男女ともに募集</span>
-            <span class="badge badge-yellow" style="margin:4px;">学生優遇あり</span>
-            <span class="badge badge-cyan" style="margin:4px;">シフト自由</span>
-            <span class="badge badge-purple" style="margin:4px;">未経験OK</span>
-            <span class="badge badge-green" style="margin:4px;">Wワーク・学生バイトOK</span>
-            <span class="badge" style="margin:4px;background:rgba(201,168,76,0.08);color:var(--pink);border:1px solid rgba(201,168,76,0.25);">18歳以上</span>
+        <div class="recruit-hero-grid reveal">
+          <div class="recruit-hero-text">
+            <div class="recruit-headline">一緒にお店を作りませんか？</div>
+            <p class="recruit-sub">
+              2027年4月のオープンに向けて、一緒に盛り上げてくれる仲間を募集中！<br>
+              バイト未経験でも、授業が忙しくても大丈夫。<br>
+              男女ともに歓迎・学生優遇あり。
+            </p>
+            <div>
+              <span class="badge badge-red-bright" style="margin:4px;">男女ともに募集</span>
+              <span class="badge badge-yellow" style="margin:4px;">学生優遇あり</span>
+              <span class="badge badge-cyan" style="margin:4px;">シフト自由</span>
+              <span class="badge badge-purple" style="margin:4px;">未経験OK</span>
+              <span class="badge badge-blue-bright" style="margin:4px;">Wワーク・学生バイトOK</span>
+              <span class="badge" style="margin:4px;background:rgba(201,168,76,0.08);color:var(--pink);border:1px solid rgba(201,168,76,0.25);">18歳以上</span>
+            </div>
+          </div>
+          <div class="recruit-hero-photo">
+            <div class="ig-carousel" id="igCarousel">
+              <div class="ig-carousel-track">
+                <img src="images/recruit-post-1.png" alt="STAFF WANTED 一緒に働ける仲間を募集" class="ig-slide">
+                <img src="images/recruit-post-2.png" alt="募集要項" class="ig-slide">
+                <img src="images/recruit-post-3.png" alt="お仕事内容" class="ig-slide">
+                <img src="images/recruit-post-4.png" alt="待遇・条件" class="ig-slide">
+                <img src="images/recruit-post-5.png" alt="こんな人探してます" class="ig-slide">
+                <img src="images/recruit-post-6.png" alt="応募方法" class="ig-slide">
+              </div>
+              <div class="ig-nav ig-nav-prev" onclick="igGo(igIdx-1)">‹</div>
+              <div class="ig-nav ig-nav-next" onclick="igGo(igIdx+1)">›</div>
+              <div class="ig-dots">
+                <span class="ig-dot active" onclick="igGo(0)"></span>
+                <span class="ig-dot" onclick="igGo(1)"></span>
+                <span class="ig-dot" onclick="igGo(2)"></span>
+                <span class="ig-dot" onclick="igGo(3)"></span>
+                <span class="ig-dot" onclick="igGo(4)"></span>
+                <span class="ig-dot" onclick="igGo(5)"></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
+
+    <script>
+      let igIdx = 0;
+      let igTimer;
+      function igGo(i) {
+        const track = document.querySelector('.ig-carousel-track');
+        const dots = document.querySelectorAll('.ig-dot');
+        const total = dots.length;
+        igIdx = (i + total) % total;
+        track.style.transform = `translateX(-${igIdx * 100}%)`;
+        dots.forEach((d, j) => d.classList.toggle('active', j === igIdx));
+      }
+      function igAutoStart() {
+        igTimer = setInterval(() => igGo(igIdx + 1), 3500);
+      }
+      const igWrap = document.getElementById('igCarousel');
+      if (igWrap) {
+        igAutoStart();
+        igWrap.addEventListener('mouseenter', () => clearInterval(igTimer));
+        igWrap.addEventListener('mouseleave', igAutoStart);
+      }
+    </script>
 
     <!-- SALARY HIGHLIGHT -->
     <section class="section section-alt">
